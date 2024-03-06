@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "43722897595",
+    "project_id": "cit-college-vy125",
+    "storage_bucket": "cit-college-vy125.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:43722897595:android:8e0678ebb006bbb0f8119e",
+        "android_client_info": {
+          "package_name": "com.example.admin"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAMlIDcTBco_nc2tlJrW3qZpsMle5uphnw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
