@@ -20,29 +20,10 @@ public class MainActivity extends AppCompatActivity  {
        Ebook=findViewById(R.id.addEbook);
 
         notice.setOnClickListener(v -> {
-            Intent intent=new Intent(MainActivity.this, Upload_Notice.class);
+            Intent intent=new Intent(MainActivity.this, Upload_notice.class);
             startActivity(intent);
         });
 
-        faculty.setOnClickListener(v -> {
-            Intent intent=new Intent(MainActivity.this,faculty.class);
-            startActivity(intent);
-        });
-
-        gallery.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent=new Intent(MainActivity.this, Upload_Notice.class);
-                startActivity(intent);
-            }
-        });
-        Ebook.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent=new Intent(MainActivity.this, Upload_Ebook.class);
-                startActivity(intent);
-            }
-        });
 
     }
 
