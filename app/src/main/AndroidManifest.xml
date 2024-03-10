@@ -4,7 +4,7 @@
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -17,6 +17,18 @@
         android:theme="@style/Theme.ADMIN"
         tools:targetApi="31">
         <activity
+            android:name=".faculty.addFaculty"
+            android:exported="false" />
+        <activity
+            android:name=".faculty.Update_faculty"
+            android:exported="false" />
+        <activity
+            android:name=".Upload_pdf"
+            android:exported="false" />
+        <activity
+            android:name=".Upload_image"
+            android:exported="false" />
+        <activity
             android:name=".Upload_notice"
             android:exported="false" />
         <activity
@@ -24,9 +36,6 @@
             android:exported="false" />
         <activity
             android:name=".Upload_Ebook"
-            android:exported="false" />
-        <activity
-            android:name=".Upload_image"
             android:exported="false" />
         <activity
             android:name=".faculty"

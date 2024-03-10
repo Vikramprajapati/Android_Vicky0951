@@ -7,6 +7,8 @@ import android.view.View;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 
+import com.example.admin.faculty.Update_faculty;
+
 public class MainActivity extends AppCompatActivity  {
 
     CardView notice,gallery,faculty,Ebook;
@@ -22,6 +24,24 @@ public class MainActivity extends AppCompatActivity  {
         notice.setOnClickListener(v -> {
             Intent intent=new Intent(MainActivity.this, Upload_notice.class);
             startActivity(intent);
+        });
+
+        gallery.setOnClickListener(v -> {
+            Intent intent=new Intent(MainActivity.this, Upload_image.class);
+            startActivity(intent);
+        });
+
+        Ebook.setOnClickListener(v -> {
+            Intent intent=new Intent(MainActivity.this, Upload_pdf.class);
+            startActivity(intent);
+        });
+
+        faculty.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(MainActivity.this, Update_faculty.class);
+                startActivity(intent);
+            }
         });
 
 
