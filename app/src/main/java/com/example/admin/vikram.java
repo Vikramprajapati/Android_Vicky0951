@@ -10,5 +10,6 @@ public class vikram extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_vikram);
+        System.out.print(" hello a remote commit");
     }
 }
