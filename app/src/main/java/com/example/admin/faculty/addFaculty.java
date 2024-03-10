@@ -26,6 +26,8 @@ public class addFaculty extends AppCompatActivity {
     Bitmap bitmap=null;
     EditText addTeacherEmail,addTeacherPost,addTeacherName;
     Spinner addteacherDepartment,addTeacherqualification;
+    String[] department={"Select Department","CSE","EE","CE","ME","Admin","Account"};
+    String[] qualification={"Select Qualification","M.Tech","B.Tech","PHD","ME","B.Sc","M.Sc"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +40,10 @@ public class addFaculty extends AppCompatActivity {
         addTeacherPost=findViewById(R.id.addTeacherPost);
         addteacherDepartment=findViewById(R.id.addTeacherDepartment);
         addTeacherqualification=findViewById(R.id.addTeacherQualification);
+
+        ArrayAdapter<String> adapter=new ArrayAdapter<>(addFaculty.this, android.R.layout.simple_spinner_item,department);
+        adapter.setDropDownViewResource(android.R.layout.select_dialog_singlechoice);
+        addteacherDepartment.setAdapter(adapter);
 
 
         addteacherDepartment.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -52,19 +58,29 @@ public class addFaculty extends AppCompatActivity {
 
             }
         });
-        ArrayList<String> arrayList=new ArrayList<>();
-        arrayList.add("Select Category");
-        arrayList.add("CSE");
-        arrayList.add("EE");
-        arrayList.add("CE");
-        arrayList.add("ME");
-        arrayList.add("ADMIN");
-        arrayList.add("Other Events");
+
+        ArrayAdapter<String> a=new ArrayAdapter<>(addFaculty.this, android.R.layout.simple_spinner_item,qualification);
+        a.setDropDownViewResource(android.R.layout.select_dialog_singlechoice);
+        addTeacherqualification.setAdapter(a);
 
 
-        ArrayAdapter<String> adapter=new ArrayAdapter<>(this, android.R.layout.simple_spinner_item,arrayList);
-        adapter.setDropDownViewResource(android.R.layout.select_dialog_singlechoice);
-        addteacherDepartment.setAdapter(adapter);
+        addTeacherqualification.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
+                String item=adapterView.getItemAtPosition(position).toString();
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+
+
+
+
 
 
 
