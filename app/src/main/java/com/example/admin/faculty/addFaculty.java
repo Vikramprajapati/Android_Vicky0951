@@ -79,11 +79,6 @@ public class addFaculty extends AppCompatActivity {
 
 
 
-
-
-
-
-
         addTeacherimage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

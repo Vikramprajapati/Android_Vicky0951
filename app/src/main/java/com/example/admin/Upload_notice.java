@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
+import androidx.core.app.ActivityCompat;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -53,6 +54,7 @@ public class Upload_notice extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_upload_notice);
 
+
         reference= FirebaseDatabase.getInstance().getReference();
         storageReference= FirebaseStorage.getInstance().getReference();
         pd=new ProgressDialog(this);
@@ -91,6 +93,7 @@ public class Upload_notice extends AppCompatActivity {
     }
 
     private void uploadImage() {
+        pd.setTitle("Please wait...");
         pd.setMessage("Uploading...");
         pd.show();
         ByteArrayOutputStream baos=new ByteArrayOutputStream();
