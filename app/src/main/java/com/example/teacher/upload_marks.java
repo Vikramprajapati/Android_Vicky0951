@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.View;
@@ -15,13 +16,19 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.Manifest;
 
 import androidx.activity.EdgeToEdge;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -45,12 +52,14 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
+import java.util.Map;
 
 public class upload_marks extends AppCompatActivity {
     /* variables declared of all xml elements*/
 
     Spinner spin_year, spin_branch, spin_sem;
-    CardView addfile3;
+    CardView addfile;
     Button uploadfile3;
     Bitmap bitmap1;
     DatabaseReference reference1;
@@ -63,6 +72,11 @@ public class upload_marks extends AppCompatActivity {
     ArrayList <String>branchList=new ArrayList<>();
     ArrayList<String> semList = new ArrayList<>();
     TextView errorYear,errorBranch,errorSem;
+    ActivityResultLauncher<String[]> mPermissionResultLauncher;
+    private boolean isReadPermissionGranted=false;
+private boolean isLocationPermissionGranted=false;
+private boolean isRecordPermissionGranted=false;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,7 +86,7 @@ public class upload_marks extends AppCompatActivity {
         reference1 = FirebaseDatabase.getInstance().getReference();
         storageReference1 = FirebaseStorage.getInstance().getReference();
         pd1 = new ProgressDialog(this);
-        addfile3 = findViewById(R.id.addfile);
+        addfile = findViewById(R.id.addfile);
         spin_year = findViewById(R.id.year_category1);
         spin_branch = findViewById(R.id.branch_category1);
         spin_sem = findViewById(R.id.sem_category1);
@@ -170,16 +184,25 @@ public class upload_marks extends AppCompatActivity {
 
             }
         });
+mPermissionResultLauncher=registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(), new ActivityResultCallback<Map<String, Boolean>>() {
+    @RequiresApi(api = Build.VERSION_CODES.TIRAMISU)
+    @Override
+    public void onActivityResult(Map<String, Boolean> result) {
+        if (result.get(Manifest.permission.READ_MEDIA_IMAGES)!=null){
+            isReadPermissionGranted= Boolean.TRUE.equals(result.get(Manifest.permission.READ_MEDIA_IMAGES));
+        }
+        if (result.get(Manifest.permission.ACCESS_FINE_LOCATION)!=null){
+            isLocationPermissionGranted= Boolean.TRUE.equals(result.get(Manifest.permission.ACCESS_FINE_LOCATION));
+        }
+        if (result.get(Manifest.permission.RECORD_AUDIO)!=null){
+            isRecordPermissionGranted= Boolean.TRUE.equals(result.get(Manifest.permission.RECORD_AUDIO));
+        }
+    }
+});
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            requestPermissions();
+        }
 
-        addfile3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(Intent.ACTION_GET_CONTENT);
-                i.setType("*/*");
-                startActivityForResult(i, 1);
-            }
-
-        });
 
         uploadfile3.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -198,6 +221,28 @@ public class upload_marks extends AppCompatActivity {
 
 
     }
+    @RequiresApi(api = Build.VERSION_CODES.TIRAMISU)
+    public void requestPermissions(){
+       isReadPermissionGranted= ContextCompat.checkSelfPermission(this,Manifest.permission.READ_MEDIA_IMAGES) == PackageManager.PERMISSION_GRANTED;
+
+        isLocationPermissionGranted = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
+        isRecordPermissionGranted= ContextCompat.checkSelfPermission(this,Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED;
+        List  <String> permissionRequest=new ArrayList<String>();
+        if(!isReadPermissionGranted){
+            permissionRequest.add(Manifest.permission.READ_MEDIA_IMAGES);
+        }
+        if(!isLocationPermissionGranted){
+            permissionRequest.add(Manifest.permission.ACCESS_FINE_LOCATION);
+        }
+        if(!isRecordPermissionGranted){
+            permissionRequest.add(Manifest.permission.RECORD_AUDIO);
+        }
+
+    if (!permissionRequest.isEmpty()) {
+        mPermissionResultLauncher.launch(permissionRequest.toArray(new String[0]));
+    }
+    }
+
 
     private void uploadfile3() {
         pd1.setMessage("Uploading...");
