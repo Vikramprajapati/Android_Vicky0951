@@ -19,7 +19,8 @@
             android:layout_margin="10dp"
             android:id="@+id/addfile"
             android:layout_gravity="center"
-            app:cardElevation="5dp">
+            app:cardElevation="5dp"
+            android:onClick="openfilechooser">
 
 
             <LinearLayout
@@ -52,8 +53,9 @@
         </com.google.android.material.card.MaterialCardView>
         <TextView
             android:layout_width="match_parent"
-            android:layout_height="35dp"
-            android:text="Enter Title"
+            android:layout_height="wrap_content"
+
+            android:id="@+id/filelist"
             android:textStyle="bold"
             android:textColor="@color/black"
             android:gravity="center_horizontal"

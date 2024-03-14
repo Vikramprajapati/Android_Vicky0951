@@ -1,5 +1,6 @@
 package com.example.teacher;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -71,13 +72,13 @@ public class upload_marks extends AppCompatActivity {
     ArrayList<String> yearList = new ArrayList<>();
     ArrayList <String>branchList=new ArrayList<>();
     ArrayList<String> semList = new ArrayList<>();
-    TextView errorYear,errorBranch,errorSem;
+    TextView filelist;
     ActivityResultLauncher<String[]> mPermissionResultLauncher;
     private boolean isReadPermissionGranted=false;
 private boolean isLocationPermissionGranted=false;
 private boolean isRecordPermissionGranted=false;
 
-
+int requestcode=1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -92,6 +93,7 @@ private boolean isRecordPermissionGranted=false;
         spin_sem = findViewById(R.id.sem_category1);
         uploadfile3 = findViewById(R.id.uploadImageBtn);
         marksTitle = findViewById(R.id.marksTitle);
+        filelist=findViewById(R.id.filelist);
 
         // adding values of 1spinner in array
         yearList.add("Select Year");
@@ -184,7 +186,7 @@ private boolean isRecordPermissionGranted=false;
 
             }
         });
-mPermissionResultLauncher=registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(), new ActivityResultCallback<Map<String, Boolean>>() {
+    mPermissionResultLauncher=registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(), new ActivityResultCallback<Map<String, Boolean>>() {
     @RequiresApi(api = Build.VERSION_CODES.TIRAMISU)
     @Override
     public void onActivityResult(Map<String, Boolean> result) {
@@ -202,6 +204,7 @@ mPermissionResultLauncher=registerForActivityResult(new ActivityResultContracts.
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             requestPermissions();
         }
+
 
 
         uploadfile3.setOnClickListener(new View.OnClickListener() {
@@ -242,6 +245,34 @@ mPermissionResultLauncher=registerForActivityResult(new ActivityResultContracts.
         mPermissionResultLauncher.launch(permissionRequest.toArray(new String[0]));
     }
     }
+     @Override
+     public void onActivityResult(int requestCode,int resultCode,Intent data){
+        super.onActivityResult(requestcode,resultCode,data);
+        if (requestCode == requestcode && resultCode== Activity.RESULT_OK){
+            if(data==null) return;
+            if(null!=data.getClipData()){
+                String tempstring="";
+                for(int i=0;i<data.getClipData().getItemCount();i++){
+                    Uri uri=data.getClipData().getItemAt(i).getUri();
+                    tempstring+= uri.getPath()+"\n";
+                }
+                filelist.setText(tempstring);
+            }
+            else{
+                Uri uri=data.getData();
+                filelist.setText(uri.getPath());
+            }
+
+        }
+
+     }
+     public void openfilechooser(View view5){
+         Intent intent=new Intent(Intent.ACTION_GET_CONTENT);
+         intent.setType("*/*");
+         intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE,true);
+         startActivityForResult(intent,1);
+     }
+
 
 
     private void uploadfile3() {
