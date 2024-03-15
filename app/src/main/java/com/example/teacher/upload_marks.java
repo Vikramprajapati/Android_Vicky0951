@@ -4,11 +4,13 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.provider.OpenableColumns;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -38,6 +40,7 @@ import androidx.core.view.WindowInsetsCompat;
 import com.example.admin.NoticeData;
 import com.example.admin.R;
 import com.example.admin.Upload_notice;
+import com.example.admin.Upload_pdf;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -49,6 +52,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -69,6 +73,7 @@ public class upload_marks extends AppCompatActivity {
     ProgressDialog pd1;
     String getDownloadUrl1 = "";
     EditText marksTitle;
+    Uri marksdata;
     ArrayList<String> yearList = new ArrayList<>();
     ArrayList <String>branchList=new ArrayList<>();
     ArrayList<String> semList = new ArrayList<>();
@@ -213,9 +218,8 @@ int requestcode=1;
                 if (marksTitle.getText().toString().isEmpty()) {
                     marksTitle.setError("Empty");
                     marksTitle.requestFocus();
-                } else if (bitmap1 == null) {
-                    uploadData();
-
+                } else if (marksdata == null) {
+                    Toast.makeText(upload_marks.this, "Please Select PDF", Toast.LENGTH_SHORT).show();
                 } else {
                     uploadfile3();
                 }
@@ -254,18 +258,47 @@ int requestcode=1;
                 String tempstring="";
                 for(int i=0;i<data.getClipData().getItemCount();i++){
                     Uri uri=data.getClipData().getItemAt(i).getUri();
-                    tempstring+= uri.getPath()+"\n";
+                    String fileName = getFileNameFromUri(uri);
+                    tempstring+= fileName+"\n";
                 }
                 filelist.setText(tempstring);
             }
             else{
                 Uri uri=data.getData();
-                filelist.setText(uri.getPath());
+                String fileName = getFileNameFromUri(uri);
+                filelist.setText(fileName);
             }
 
         }
 
      }
+    private String getFileNameFromUri(Uri uri) {
+        String fileName = "";
+        if (uri.toString().startsWith("content://")) {
+            Cursor cursor = null;
+            try {
+                cursor = getContentResolver().query(uri, null, null, null, null);
+                if (cursor != null && cursor.moveToFirst()) {
+                    int columnIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
+                    if (columnIndex != -1) {
+                        fileName = cursor.getString(columnIndex);
+                    } else {
+                        // Handle the case when DISPLAY_NAME column is not found
+                        fileName = uri.getLastPathSegment();
+                    }
+                }
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            } finally {
+                if (cursor != null) {
+                    cursor.close();
+                }
+            }
+        } else if (uri.toString().startsWith("file://")) {
+            fileName = new File(uri.getPath()).getName();
+        }
+        return fileName;
+    }
      public void openfilechooser(View view5){
          Intent intent=new Intent(Intent.ACTION_GET_CONTENT);
          intent.setType("*/*");
