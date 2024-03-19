@@ -1,5 +1,7 @@
 package com.example.teacher;
 
+import static android.service.controls.ControlsProviderService.TAG;
+
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -9,8 +11,10 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Looper;
 import android.provider.MediaStore;
 import android.provider.OpenableColumns;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -53,12 +57,17 @@ import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class upload_marks extends AppCompatActivity {
     /* variables declared of all xml elements*/
@@ -73,7 +82,7 @@ public class upload_marks extends AppCompatActivity {
     ProgressDialog pd1;
     String getDownloadUrl1 = "";
     EditText marksTitle;
-    Uri marksdata;
+
     ArrayList<String> yearList = new ArrayList<>();
     ArrayList <String>branchList=new ArrayList<>();
     ArrayList<String> semList = new ArrayList<>();
@@ -82,8 +91,10 @@ public class upload_marks extends AppCompatActivity {
     private boolean isReadPermissionGranted=false;
 private boolean isLocationPermissionGranted=false;
 private boolean isRecordPermissionGranted=false;
+ArrayList<Uri> fileuris =new ArrayList<>();
 
 int requestcode=1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -96,9 +107,10 @@ int requestcode=1;
         spin_year = findViewById(R.id.year_category1);
         spin_branch = findViewById(R.id.branch_category1);
         spin_sem = findViewById(R.id.sem_category1);
-        uploadfile3 = findViewById(R.id.uploadImageBtn);
+        uploadfile3 = findViewById(R.id.uploadfileBtn);
         marksTitle = findViewById(R.id.marksTitle);
         filelist=findViewById(R.id.filelist);
+
 
         // adding values of 1spinner in array
         yearList.add("Select Year");
@@ -213,21 +225,28 @@ int requestcode=1;
 
 
         uploadfile3.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View v) {
                 if (marksTitle.getText().toString().isEmpty()) {
                     marksTitle.setError("Empty");
                     marksTitle.requestFocus();
-                } else if (marksdata == null) {
+                } else if (fileuris == null) {
                     Toast.makeText(upload_marks.this, "Please Select PDF", Toast.LENGTH_SHORT).show();
-                } else {
-                    uploadfile3();
+                }
+                else if (spin_year.getSelectedItem()== null || spin_branch.getSelectedItem()== null ||spin_sem.getSelectedItem()== null) {
+                    Toast.makeText(upload_marks.this,"all three fields are required for selection ",Toast.LENGTH_SHORT).show();
+
+                }
+               else {
+                    uploadfiles();
                 }
             }
         });
 
 
     }
+
     @RequiresApi(api = Build.VERSION_CODES.TIRAMISU)
     public void requestPermissions(){
        isReadPermissionGranted= ContextCompat.checkSelfPermission(this,Manifest.permission.READ_MEDIA_IMAGES) == PackageManager.PERMISSION_GRANTED;
@@ -249,30 +268,90 @@ int requestcode=1;
         mPermissionResultLauncher.launch(permissionRequest.toArray(new String[0]));
     }
     }
-     @Override
-     public void onActivityResult(int requestCode,int resultCode,Intent data){
-        super.onActivityResult(requestcode,resultCode,data);
-        if (requestCode == requestcode && resultCode== Activity.RESULT_OK){
-            if(data==null) return;
-            if(null!=data.getClipData()){
-                String tempstring="";
-                for(int i=0;i<data.getClipData().getItemCount();i++){
-                    Uri uri=data.getClipData().getItemAt(i).getUri();
-                    String fileName = getFileNameFromUri(uri);
-                    tempstring+= fileName+"\n";
+    public void openfilechooser(View view5){
+        Intent intent=new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType("*/*");
+        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE,true);
+        startActivityForResult(intent,1);
+    }
+
+public void uploadfiles(){
+    pd1.setMessage("Uploading pdf");
+    pd1.show();
+        for(int j=0;j<fileuris.size();j++){
+            Uri perfile=fileuris.get(j);
+            StorageReference folder=FirebaseStorage.getInstance().getReference().child("marks");
+            StorageReference filename=folder.child("file"+perfile.getLastPathSegment());
+            filename.putFile(perfile).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                   filename.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                       @Override
+                       public void onSuccess(Uri uri) {
+                           DatabaseReference databaseReference=FirebaseDatabase.getInstance().getReference().child("teacher");
+                           HashMap<String,String> hashMap=new HashMap<>();
+                           hashMap.put("link",String.valueOf((uri)));
+                           databaseReference.push().setValue(hashMap);
+                           pd1.dismiss();
+                           fileuris.clear();
+                       }
+                   });
+                }
+            });
+        }
+
+}
+    @Override
+    protected void onActivityResult(int requestCode,int resultCode,@Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == requestcode && resultCode == Activity.RESULT_OK) {
+            if (data == null) return;
+            if (null != data.getClipData()) {
+                String tempstring = "";
+                for (int i = 0; i < data.getClipData().getItemCount(); i++) {
+                    Uri file = data.getClipData().getItemAt(i).getUri();
+                    String fileName = getFileNameFromUri(file);
+                    fileuris.add(file);
+                    tempstring += fileName + "\n";
                 }
                 filelist.setText(tempstring);
-            }
-            else{
-                Uri uri=data.getData();
-                String fileName = getFileNameFromUri(uri);
-                filelist.setText(fileName);
+            } else {
+                Uri file = data.getData();
+                if (file != null) {
+                    fileuris.add(file);
+                    String fileName = getFileNameFromUri(file);
+                    filelist.setText(fileName);
+                }
             }
 
         }
+    }
 
-     }
-    private String getFileNameFromUri(Uri uri) {
+
+
+
+
+
+
+
+
+
+
+
+
+    public void fillSpinner(){
+
+    ArrayAdapter<String> adapter2 = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, branchList);
+        adapter2.setDropDownViewResource(android.R.layout.select_dialog_singlechoice);
+        spin_branch.setAdapter(adapter2);
+        ArrayAdapter<String> adapter3 = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, semList);
+        adapter3.setDropDownViewResource(android.R.layout.select_dialog_singlechoice);
+        spin_sem.setAdapter(adapter3);
+}
+
+
+    public String getFileNameFromUri(Uri uri) {
         String fileName = "";
         if (uri.toString().startsWith("content://")) {
             Cursor cursor = null;
@@ -299,87 +378,4 @@ int requestcode=1;
         }
         return fileName;
     }
-     public void openfilechooser(View view5){
-         Intent intent=new Intent(Intent.ACTION_GET_CONTENT);
-         intent.setType("*/*");
-         intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE,true);
-         startActivityForResult(intent,1);
-     }
-
-
-
-    private void uploadfile3() {
-        pd1.setMessage("Uploading...");
-        pd1.show();
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bitmap1.compress(Bitmap.CompressFormat.JPEG, 50, baos);
-        byte[] finalmarks = baos.toByteArray();
-        final StorageReference filepath;
-        filepath = storageReference1.child("Marks").child(finalmarks + "jpg");
-        final UploadTask uploadTask = filepath.putBytes(finalmarks);
-        uploadTask.addOnCompleteListener(upload_marks.this, new OnCompleteListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
-                if (task.isSuccessful()) {
-                    uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                        @Override
-                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                            filepath.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                                @Override
-                                public void onSuccess(Uri uri) {
-                                    downloadUrl1 = String.valueOf(uri);
-                                    uploadData();
-                                }
-                            });
-                        }
-                    });
-                } else {
-                    pd1.dismiss();
-                    Toast.makeText(upload_marks.this, "Something Went Wrong", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-    }
-
-    private void uploadData() {
-        reference1 = reference1.child("Marks");
-        final String uniqueKey = reference1.push().getKey();
-
-        String title = marksTitle.getText().toString();
-
-        Calendar calForData = Calendar.getInstance();
-        SimpleDateFormat currentDate = new SimpleDateFormat("dd-MM-yy");
-        String date = currentDate.format(calForData.getTime());
-
-        Calendar calForTime = Calendar.getInstance();
-        SimpleDateFormat currentTime = new SimpleDateFormat("hh:mm a");
-        String time = currentTime.format(calForData.getTime());
-
-        MarksData marksdata = new MarksData(title, downloadUrl1, date, time, uniqueKey);
-
-        reference1.child(uniqueKey).setValue(marksdata).addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void unused) {
-                pd1.dismiss();
-                Toast.makeText(upload_marks.this, "Marks Uploaded", Toast.LENGTH_SHORT).show();
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                pd1.dismiss();
-                Toast.makeText(upload_marks.this, "Something Went Wrong", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-
-    }
-    public void fillSpinner(){
-
-    ArrayAdapter<String> adapter2 = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, branchList);
-        adapter2.setDropDownViewResource(android.R.layout.select_dialog_singlechoice);
-        spin_branch.setAdapter(adapter2);
-        ArrayAdapter<String> adapter3 = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, semList);
-        adapter3.setDropDownViewResource(android.R.layout.select_dialog_singlechoice);
-        spin_sem.setAdapter(adapter3);
-}
 }
