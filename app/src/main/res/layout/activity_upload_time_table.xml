@@ -17,8 +17,9 @@
             android:layout_width="130dp"
             android:layout_height="150dp"
             android:layout_margin="10dp"
-            android:id="@+id/addfile"
+            android:id="@+id/addtable"
             android:layout_gravity="center"
+            android:onClick="opentablechooser"
             app:cardElevation="5dp">
 
 
@@ -52,11 +53,11 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="35dp"
-            android:text="Enter Title"
             android:textStyle="bold"
             android:textColor="@color/black"
             android:gravity="center_horizontal"
             android:layout_marginTop="5dp"
+            android:id="@+id/tablelist"
             android:textSize="20dp">
 
         </TextView>
@@ -64,6 +65,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textStyle="bold"
+            android:id="@+id/tableTitle"
             android:layout_marginTop="25dp"
             android:textSize="20dp">
 
@@ -102,10 +104,10 @@
         <com.google.android.material.button.MaterialButton
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="Upload file"
+            android:text="Upload Time Table"
             android:layout_marginTop="20dp"
             android:textAllCaps="false"
-            android:id="@+id/uploadImageBtn"/>
+            android:id="@+id/uploadtable"/>
 
     </LinearLayout>
 </ScrollView>
