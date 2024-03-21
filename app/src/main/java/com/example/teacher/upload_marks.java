@@ -76,13 +76,13 @@ public class upload_marks extends AppCompatActivity {
     CardView addfile;
     Button uploadfile3;
     Bitmap bitmap1;
-    DatabaseReference reference1;
-    StorageReference storageReference1;
+    DatabaseReference reference;
+    StorageReference storageReference;
     String downloadUrl1;
     ProgressDialog pd1;
-    String getDownloadUrl1 = "";
     EditText marksTitle;
-
+    private Calendar calForData;
+    private SimpleDateFormat currentDate,currentTime;
     ArrayList<String> yearList = new ArrayList<>();
     ArrayList <String>branchList=new ArrayList<>();
     ArrayList<String> semList = new ArrayList<>();
@@ -93,6 +93,7 @@ private boolean isLocationPermissionGranted=false;
 private boolean isRecordPermissionGranted=false;
 ArrayList<Uri> fileuris =new ArrayList<>();
 
+
 int requestcode=1;
 
     @Override
@@ -100,8 +101,8 @@ int requestcode=1;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_upload_marks);
 
-        reference1 = FirebaseDatabase.getInstance().getReference();
-        storageReference1 = FirebaseStorage.getInstance().getReference();
+        reference = FirebaseDatabase.getInstance().getReference();
+        storageReference = FirebaseStorage.getInstance().getReference();
         pd1 = new ProgressDialog(this);
         addfile = findViewById(R.id.addfile);
         spin_year = findViewById(R.id.year_category1);
@@ -111,7 +112,9 @@ int requestcode=1;
         marksTitle = findViewById(R.id.marksTitle);
         filelist=findViewById(R.id.filelist);
 
-
+        calForData=Calendar.getInstance();
+        currentDate=new SimpleDateFormat("dd-MM-yy");
+        currentTime=new SimpleDateFormat("hh:mm a");
         // adding values of 1spinner in array
         yearList.add("Select Year");
         yearList.add("4 year");
@@ -231,7 +234,7 @@ int requestcode=1;
                 if (marksTitle.getText().toString().isEmpty()) {
                     marksTitle.setError("Empty");
                     marksTitle.requestFocus();
-                } else if (fileuris == null) {
+                } else if (fileuris == null|| fileuris.isEmpty()) {
                     Toast.makeText(upload_marks.this, "Please Select PDF", Toast.LENGTH_SHORT).show();
                 }
                 else if (spin_year.getSelectedItem()== null || spin_branch.getSelectedItem()== null ||spin_sem.getSelectedItem()== null) {
@@ -280,27 +283,47 @@ public void uploadfiles(){
     pd1.show();
         for(int j=0;j<fileuris.size();j++){
             Uri perfile=fileuris.get(j);
-            StorageReference folder=FirebaseStorage.getInstance().getReference().child("marks");
+            StorageReference folder=FirebaseStorage.getInstance().getReference().child("Marks");
             StorageReference filename=folder.child("file"+perfile.getLastPathSegment());
+
             filename.putFile(perfile).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
+                
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                    filename.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                        @Override
                        public void onSuccess(Uri uri) {
-                           DatabaseReference databaseReference=FirebaseDatabase.getInstance().getReference().child("teacher");
+                           DatabaseReference databaseReference=FirebaseDatabase.getInstance().getReference().child("MARKS");
                            HashMap<String,String> hashMap=new HashMap<>();
-                           hashMap.put("link",String.valueOf((uri)));
+                           hashMap.put("Marks Url",String.valueOf((uri)));
+                           hashMap.put("Date",currentDate.format(calForData.getTime()));
+                           hashMap.put("Time",currentTime.format(calForData.getTime()));
+                           hashMap.put("Unique Key",databaseReference.child("MARKS").push().getKey());
+                           hashMap.put("Marks Title",marksTitle.getText().toString());
+                           hashMap.put("Year",spin_year.getSelectedItem().toString());
+                           hashMap.put("Branch:",spin_branch.getSelectedItem().toString());
+                           hashMap.put("Semester:",spin_sem.getSelectedItem().toString());
                            databaseReference.push().setValue(hashMap);
                            pd1.dismiss();
+                           Toast.makeText(upload_marks.this,"marks uploaded successfully ",Toast.LENGTH_SHORT).show();
                            fileuris.clear();
                        }
                    });
                 }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    pd1.dismiss();
+                    Toast.makeText(upload_marks.this,"Something Went Wrong",Toast.LENGTH_SHORT).show();
+                }
+
             });
+
+
         }
 
 }
+
     @Override
     protected void onActivityResult(int requestCode,int resultCode,@Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
