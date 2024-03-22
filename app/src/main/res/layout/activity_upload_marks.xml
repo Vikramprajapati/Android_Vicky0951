@@ -19,7 +19,8 @@
             android:layout_margin="10dp"
             android:id="@+id/addfile"
             android:layout_gravity="center"
-            app:cardElevation="5dp">
+            app:cardElevation="5dp"
+            android:onClick="openfilechooser">
 
 
             <LinearLayout
@@ -46,13 +47,15 @@
                     android:padding="5dp"
                     android:layout_marginTop="10dp"
                     android:textColor="@color/textColor"
+                    android:id="@+id/choosefile"
                     />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
         <TextView
             android:layout_width="match_parent"
-            android:layout_height="35dp"
-            android:text="Enter Title"
+            android:layout_height="wrap_content"
+
+            android:id="@+id/filelist"
             android:textStyle="bold"
             android:textColor="@color/black"
             android:gravity="center_horizontal"
@@ -108,7 +111,7 @@
             android:text="Upload Marks"
             android:layout_marginTop="20dp"
             android:textAllCaps="false"
-            android:id="@+id/uploadImageBtn"/>
+            android:id="@+id/uploadfileBtn"/>
 
     </LinearLayout>
 </ScrollView>

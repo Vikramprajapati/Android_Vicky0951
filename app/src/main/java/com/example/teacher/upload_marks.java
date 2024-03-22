@@ -1,12 +1,20 @@
 package com.example.teacher;
 
+import static android.service.controls.ControlsProviderService.TAG;
+
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Looper;
 import android.provider.MediaStore;
+import android.provider.OpenableColumns;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -15,13 +23,19 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.Manifest;
 
 import androidx.activity.EdgeToEdge;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -30,6 +44,7 @@ import androidx.core.view.WindowInsetsCompat;
 import com.example.admin.NoticeData;
 import com.example.admin.R;
 import com.example.admin.Upload_notice;
+import com.example.admin.Upload_pdf;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -41,44 +56,65 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class upload_marks extends AppCompatActivity {
     /* variables declared of all xml elements*/
 
     Spinner spin_year, spin_branch, spin_sem;
-    CardView addfile3;
+    CardView addfile;
     Button uploadfile3;
     Bitmap bitmap1;
-    DatabaseReference reference1;
-    StorageReference storageReference1;
+    DatabaseReference reference;
+    StorageReference storageReference;
     String downloadUrl1;
     ProgressDialog pd1;
-    String getDownloadUrl1 = "";
     EditText marksTitle;
+    private Calendar calForData;
+    private SimpleDateFormat currentDate,currentTime;
     ArrayList<String> yearList = new ArrayList<>();
     ArrayList <String>branchList=new ArrayList<>();
     ArrayList<String> semList = new ArrayList<>();
-    TextView errorYear,errorBranch,errorSem;
+    TextView filelist;
+    ActivityResultLauncher<String[]> mPermissionResultLauncher;
+    private boolean isReadPermissionGranted=false;
+private boolean isLocationPermissionGranted=false;
+private boolean isRecordPermissionGranted=false;
+ArrayList<Uri> fileuris =new ArrayList<>();
+
+
+int requestcode=1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_upload_marks);
 
-        reference1 = FirebaseDatabase.getInstance().getReference();
-        storageReference1 = FirebaseStorage.getInstance().getReference();
+        reference = FirebaseDatabase.getInstance().getReference();
+        storageReference = FirebaseStorage.getInstance().getReference();
         pd1 = new ProgressDialog(this);
-        addfile3 = findViewById(R.id.addfile);
+        addfile = findViewById(R.id.addfile);
         spin_year = findViewById(R.id.year_category1);
         spin_branch = findViewById(R.id.branch_category1);
         spin_sem = findViewById(R.id.sem_category1);
-        uploadfile3 = findViewById(R.id.uploadImageBtn);
+        uploadfile3 = findViewById(R.id.uploadfileBtn);
         marksTitle = findViewById(R.id.marksTitle);
+        filelist=findViewById(R.id.filelist);
 
+        calForData=Calendar.getInstance();
+        currentDate=new SimpleDateFormat("dd-MM-yy");
+        currentTime=new SimpleDateFormat("hh:mm a");
         // adding values of 1spinner in array
         yearList.add("Select Year");
         yearList.add("4 year");
@@ -170,28 +206,43 @@ public class upload_marks extends AppCompatActivity {
 
             }
         });
+    mPermissionResultLauncher=registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(), new ActivityResultCallback<Map<String, Boolean>>() {
+    @RequiresApi(api = Build.VERSION_CODES.TIRAMISU)
+    @Override
+    public void onActivityResult(Map<String, Boolean> result) {
+        if (result.get(Manifest.permission.READ_MEDIA_IMAGES)!=null){
+            isReadPermissionGranted= Boolean.TRUE.equals(result.get(Manifest.permission.READ_MEDIA_IMAGES));
+        }
+        if (result.get(Manifest.permission.ACCESS_FINE_LOCATION)!=null){
+            isLocationPermissionGranted= Boolean.TRUE.equals(result.get(Manifest.permission.ACCESS_FINE_LOCATION));
+        }
+        if (result.get(Manifest.permission.RECORD_AUDIO)!=null){
+            isRecordPermissionGranted= Boolean.TRUE.equals(result.get(Manifest.permission.RECORD_AUDIO));
+        }
+    }
+});
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            requestPermissions();
+        }
 
-        addfile3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(Intent.ACTION_GET_CONTENT);
-                i.setType("*/*");
-                startActivityForResult(i, 1);
-            }
 
-        });
 
         uploadfile3.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View v) {
                 if (marksTitle.getText().toString().isEmpty()) {
                     marksTitle.setError("Empty");
                     marksTitle.requestFocus();
-                } else if (bitmap1 == null) {
-                    uploadData();
+                } else if (fileuris == null|| fileuris.isEmpty()) {
+                    Toast.makeText(upload_marks.this, "Please Select PDF", Toast.LENGTH_SHORT).show();
+                }
+                else if (spin_year.getSelectedItem()== null || spin_branch.getSelectedItem()== null ||spin_sem.getSelectedItem()== null) {
+                    Toast.makeText(upload_marks.this,"all three fields are required for selection ",Toast.LENGTH_SHORT).show();
 
-                } else {
-                    uploadfile3();
+                }
+               else {
+                    uploadfiles();
                 }
             }
         });
@@ -199,71 +250,119 @@ public class upload_marks extends AppCompatActivity {
 
     }
 
-    private void uploadfile3() {
-        pd1.setMessage("Uploading...");
-        pd1.show();
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bitmap1.compress(Bitmap.CompressFormat.JPEG, 50, baos);
-        byte[] finalmarks = baos.toByteArray();
-        final StorageReference filepath;
-        filepath = storageReference1.child("Marks").child(finalmarks + "jpg");
-        final UploadTask uploadTask = filepath.putBytes(finalmarks);
-        uploadTask.addOnCompleteListener(upload_marks.this, new OnCompleteListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
-                if (task.isSuccessful()) {
-                    uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                        @Override
-                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                            filepath.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                                @Override
-                                public void onSuccess(Uri uri) {
-                                    downloadUrl1 = String.valueOf(uri);
-                                    uploadData();
-                                }
-                            });
-                        }
-                    });
-                } else {
+    @RequiresApi(api = Build.VERSION_CODES.TIRAMISU)
+    public void requestPermissions(){
+       isReadPermissionGranted= ContextCompat.checkSelfPermission(this,Manifest.permission.READ_MEDIA_IMAGES) == PackageManager.PERMISSION_GRANTED;
+
+        isLocationPermissionGranted = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
+        isRecordPermissionGranted= ContextCompat.checkSelfPermission(this,Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED;
+        List  <String> permissionRequest=new ArrayList<String>();
+        if(!isReadPermissionGranted){
+            permissionRequest.add(Manifest.permission.READ_MEDIA_IMAGES);
+        }
+        if(!isLocationPermissionGranted){
+            permissionRequest.add(Manifest.permission.ACCESS_FINE_LOCATION);
+        }
+        if(!isRecordPermissionGranted){
+            permissionRequest.add(Manifest.permission.RECORD_AUDIO);
+        }
+
+    if (!permissionRequest.isEmpty()) {
+        mPermissionResultLauncher.launch(permissionRequest.toArray(new String[0]));
+    }
+    }
+    public void openfilechooser(View view5){
+        Intent intent=new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType("*/*");
+        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE,true);
+        startActivityForResult(intent,1);
+    }
+
+public void uploadfiles(){
+    pd1.setMessage("Uploading pdf");
+    pd1.show();
+        for(int j=0;j<fileuris.size();j++){
+            Uri perfile=fileuris.get(j);
+            StorageReference folder=FirebaseStorage.getInstance().getReference().child("Marks");
+            StorageReference filename=folder.child("file"+perfile.getLastPathSegment());
+
+            filename.putFile(perfile).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                   filename.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                       @Override
+                       public void onSuccess(Uri uri) {
+                           DatabaseReference databaseReference=FirebaseDatabase.getInstance().getReference().child("MARKS");
+                           HashMap<String,String> hashMap=new HashMap<>();
+                           hashMap.put("Marks Url",String.valueOf((uri)));
+                           hashMap.put("Date",currentDate.format(calForData.getTime()));
+                           hashMap.put("Time",currentTime.format(calForData.getTime()));
+                           hashMap.put("Unique Key",databaseReference.child("MARKS").push().getKey());
+                           hashMap.put("Marks Title",marksTitle.getText().toString());
+                           hashMap.put("Year",spin_year.getSelectedItem().toString());
+                           hashMap.put("Branch:",spin_branch.getSelectedItem().toString());
+                           hashMap.put("Semester:",spin_sem.getSelectedItem().toString());
+                           databaseReference.push().setValue(hashMap);
+                           pd1.dismiss();
+                           Toast.makeText(upload_marks.this,"marks uploaded successfully ",Toast.LENGTH_SHORT).show();
+                           fileuris.clear();
+                       }
+                   });
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
                     pd1.dismiss();
-                    Toast.makeText(upload_marks.this, "Something Went Wrong", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(upload_marks.this,"Something Went Wrong",Toast.LENGTH_SHORT).show();
+                }
+
+            });
+
+
+        }
+
+}
+
+    @Override
+    protected void onActivityResult(int requestCode,int resultCode,@Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == requestcode && resultCode == Activity.RESULT_OK) {
+            if (data == null) return;
+            if (null != data.getClipData()) {
+                String tempstring = "";
+                for (int i = 0; i < data.getClipData().getItemCount(); i++) {
+                    Uri file = data.getClipData().getItemAt(i).getUri();
+                    String fileName = getFileNameFromUri(file);
+                    fileuris.add(file);
+                    tempstring += fileName + "\n";
+                }
+                filelist.setText(tempstring);
+            } else {
+                Uri file = data.getData();
+                if (file != null) {
+                    fileuris.add(file);
+                    String fileName = getFileNameFromUri(file);
+                    filelist.setText(fileName);
                 }
             }
-        });
+
+        }
     }
 
-    private void uploadData() {
-        reference1 = reference1.child("Marks");
-        final String uniqueKey = reference1.push().getKey();
-
-        String title = marksTitle.getText().toString();
-
-        Calendar calForData = Calendar.getInstance();
-        SimpleDateFormat currentDate = new SimpleDateFormat("dd-MM-yy");
-        String date = currentDate.format(calForData.getTime());
-
-        Calendar calForTime = Calendar.getInstance();
-        SimpleDateFormat currentTime = new SimpleDateFormat("hh:mm a");
-        String time = currentTime.format(calForData.getTime());
-
-        MarksData marksdata = new MarksData(title, downloadUrl1, date, time, uniqueKey);
-
-        reference1.child(uniqueKey).setValue(marksdata).addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void unused) {
-                pd1.dismiss();
-                Toast.makeText(upload_marks.this, "Marks Uploaded", Toast.LENGTH_SHORT).show();
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                pd1.dismiss();
-                Toast.makeText(upload_marks.this, "Something Went Wrong", Toast.LENGTH_SHORT).show();
-            }
-        });
 
 
-    }
+
+
+
+
+
+
+
+
+
+
     public void fillSpinner(){
 
     ArrayAdapter<String> adapter2 = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, branchList);
@@ -273,4 +372,33 @@ public class upload_marks extends AppCompatActivity {
         adapter3.setDropDownViewResource(android.R.layout.select_dialog_singlechoice);
         spin_sem.setAdapter(adapter3);
 }
+
+
+    public String getFileNameFromUri(Uri uri) {
+        String fileName = "";
+        if (uri.toString().startsWith("content://")) {
+            Cursor cursor = null;
+            try {
+                cursor = getContentResolver().query(uri, null, null, null, null);
+                if (cursor != null && cursor.moveToFirst()) {
+                    int columnIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
+                    if (columnIndex != -1) {
+                        fileName = cursor.getString(columnIndex);
+                    } else {
+                        // Handle the case when DISPLAY_NAME column is not found
+                        fileName = uri.getLastPathSegment();
+                    }
+                }
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            } finally {
+                if (cursor != null) {
+                    cursor.close();
+                }
+            }
+        } else if (uri.toString().startsWith("file://")) {
+            fileName = new File(uri.getPath()).getName();
+        }
+        return fileName;
+    }
 }
