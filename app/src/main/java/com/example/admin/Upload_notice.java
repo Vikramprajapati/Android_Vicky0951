@@ -44,7 +44,7 @@ public class Upload_notice extends AppCompatActivity {
      TextView textView;
      Button btn;
      Bitmap bitmap;
-     DatabaseReference reference;
+     DatabaseReference reference,dbRef;
      StorageReference storageReference;
      String downloadUrl;
      String getDownloadUrl="";
@@ -127,8 +127,8 @@ public class Upload_notice extends AppCompatActivity {
         });
     }
     private void uploadData() {
-        reference=reference.child("Notice");
-        final String uniqueKey=reference.push().getKey();
+        dbRef=reference.child("Notice");
+        final String uniqueKey=dbRef.push().getKey();
 
         String title=noticetitle.getText().toString();
 
@@ -142,7 +142,7 @@ public class Upload_notice extends AppCompatActivity {
 
         NoticeData noticeData=new NoticeData(title,downloadUrl,date,time,uniqueKey);
 
-        reference.child(uniqueKey).setValue(noticeData).addOnSuccessListener(new OnSuccessListener<Void>() {
+       dbRef.child(uniqueKey).setValue(noticeData).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void unused) {
                 pd.dismiss();
