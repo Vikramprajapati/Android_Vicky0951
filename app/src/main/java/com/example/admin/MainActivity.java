@@ -1,5 +1,6 @@
 package com.example.admin;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -11,7 +12,8 @@ import com.example.admin.faculty.Update_faculty;
 
 public class MainActivity extends AppCompatActivity  {
 
-    CardView notice,gallery,faculty,Ebook;
+    CardView notice,gallery,faculty,Ebook,registration;
+    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -20,11 +22,19 @@ public class MainActivity extends AppCompatActivity  {
        gallery=findViewById(R.id.addGalleryImage);
        faculty=findViewById(R.id.faculty);
        Ebook=findViewById(R.id.addEbook);
+       registration=findViewById(R.id.registration);
 
         notice.setOnClickListener(v -> {
             Intent intent=new Intent(MainActivity.this, Upload_notice.class);
             startActivity(intent);
         });
+
+        registration.setOnClickListener(v -> {
+            Intent intent=new Intent(MainActivity.this, AddAccount.class);
+            startActivity(intent);
+        });
+
+
 
         gallery.setOnClickListener(v -> {
             Intent intent=new Intent(MainActivity.this, Upload_image.class);

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:layout_margin="4dp"
 
     >
@@ -11,7 +11,7 @@
         android:orientation="vertical"
         >
         <LinearLayout
-            android:layout_width="480dp"
+            android:layout_width="400dp"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:weightSum="2">
@@ -32,6 +32,7 @@
                     android:text="Vikram Kumar"
                     android:textColor="@color/textColor"
                     android:textSize="18sp"
+                    android:textStyle="bold"
                     >
 
                 </TextView>
@@ -46,7 +47,7 @@
 
                 </TextView>
                 <TextView
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/teacheremail"
                     android:text="vickyprajapati0951@gmail.com"
@@ -64,6 +65,19 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="0.5"
                     android:text="8769788575"
+                    android:textColor="@color/textColor"
+                    android:textSize="18sp"
+
+                    >
+
+                </TextView>
+
+                <TextView
+                    android:id="@+id/teacherqualification"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:text="B.Tech"
                     android:textColor="@color/textColor"
                     android:textSize="18sp"
 

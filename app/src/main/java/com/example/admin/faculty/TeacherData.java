@@ -20,7 +20,7 @@ public class TeacherData {
 
 
 
-    public TeacherData(String name, String post, String email, String number, String exp, String key, String image, String qualification) {
+    public TeacherData(String name, String post, String email, String number, String key, String image, String qualification) {
         this.name = name;
         this.post = post;
         this.email = email;

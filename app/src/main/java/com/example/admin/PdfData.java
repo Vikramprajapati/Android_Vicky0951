@@ -42,8 +42,7 @@ public class PdfData {
         return time;
     }
 
-    public void setTime(String time) {
-        this.time = time;
+    public void setTime(String time) {this.time = time;
     }
 
     public String getKey() {

@@ -43,12 +43,13 @@ public class addFaculty extends AppCompatActivity {
 
     ImageView addTeacherimage;
     Bitmap bitmap=null;
-    EditText addTeacherEmail,addTeacherPost,addTeacherName,addTeacherNumber,addTeacherExp;
-    Spinner addteacherDepartment,addTeacherqualification;
+    EditText addTeacherEmail,addTeacherPost,addTeacherName,addTeacherNumber,addTeacherExp,addTeacherQualification;
+    Spinner addteacherDepartment;
     String[] item={"Select Department","CSE","EE","CE","ME","Admin","Account"};
     String[] item2={"Select Qualification","M.Tech","B.Tech","PHD","ME","B.Sc","M.Sc"};
     String name,post,email,downloadUrl="",number,exp,qualification;
     Button addTeacher;
+    Uri downloaduri;
     ProgressDialog pd;
     StorageReference storageReference;
     DatabaseReference reference,dbRef;
@@ -65,8 +66,9 @@ public class addFaculty extends AppCompatActivity {
         addTeacherPost=findViewById(R.id.addTeacherPost);
         addteacherDepartment=findViewById(R.id.addTeacherDepartment);
         addTeacherNumber=findViewById(R.id.addTeacherMobile);
+        addTeacherQualification=findViewById(R.id.addTeacherQualification);
 
-        addTeacherqualification=findViewById(R.id.addTeacherQualification);
+      //  addTeacherqualification=findViewById(R.id.addTeacherQualification);
 
         pd=new ProgressDialog(this);
 
@@ -95,25 +97,7 @@ public class addFaculty extends AppCompatActivity {
             }
         });
 
-        ArrayAdapter<String> a=new ArrayAdapter<>(addFaculty.this, android.R.layout.simple_spinner_item,item2);
-        a.setDropDownViewResource(android.R.layout.select_dialog_singlechoice);
-        addTeacherqualification.setAdapter(a);
 
-
-
-        //set qualification on spinner
-        addTeacherqualification.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
-                String qualification=addTeacherqualification.getSelectedItem().toString();
-
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
 
 
 // add teacher
@@ -138,7 +122,7 @@ public class addFaculty extends AppCompatActivity {
         post=addTeacherPost.getText().toString();
         email=addTeacherEmail.getText().toString();
         number=addTeacherNumber.getText().toString();
-        exp=addTeacherExp.getText().toString();
+        qualification=addTeacherQualification.getText().toString();
 
         if(name.isEmpty()){
             addTeacherName.setError("Empty");
@@ -152,17 +136,15 @@ public class addFaculty extends AppCompatActivity {
         }else if(number.isEmpty()){
             addTeacherNumber.setError("Empty");
             addTeacherNumber.requestFocus();
-        }else if(exp.isEmpty()){
-            addTeacherExp.setError("Empty");
-            addTeacherExp.requestFocus();
         }else if(department.equals("Select Department")){
             Toast.makeText(this, "Please Provide Teacher Department", Toast.LENGTH_SHORT).show();
-        }else if(item2.equals("Select Qualification")){
-            Toast.makeText(this, "Please Provide Teacher Qualification", Toast.LENGTH_SHORT).show();
-        } else if (bitmap==null) {
-          insertData();
-        }
-        else {
+        }else if(qualification.isEmpty()){
+            addTeacherQualification.setError("Empty");
+            addTeacherQualification.requestFocus();
+        } else if (downloaduri==null) {
+            Toast.makeText(this, "Please Select Photo", Toast.LENGTH_SHORT).show();
+
+        } else {
             pd.setTitle("Please wait...");
             pd.setMessage("Uploading...");
             pd.show();
@@ -175,13 +157,16 @@ public class addFaculty extends AppCompatActivity {
         reference=reference.child(department);
         final String uniqueKey=reference.push().getKey();
 
-        TeacherData teacherData=new TeacherData(name,post,email,number,exp,uniqueKey,downloadUrl,qualification);
+        TeacherData teacherData=new TeacherData(name,post,email,number,uniqueKey,downloadUrl,qualification);
 
         reference.child(uniqueKey).setValue(teacherData).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void unused) {
                 pd.dismiss();
                 Toast.makeText(addFaculty.this,"Teacher Added",Toast.LENGTH_SHORT).show();
+                Intent intent=new Intent();
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -193,7 +178,6 @@ public class addFaculty extends AppCompatActivity {
     }
 
     private void uploadImage() {
-
         ByteArrayOutputStream baos=new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG,50,baos);
         byte[] finalimg= baos.toByteArray();
@@ -234,9 +218,9 @@ public class addFaculty extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode==1 && resultCode==RESULT_OK ){
-            Uri uri=data.getData();
+            downloaduri=data.getData();
             try {
-                bitmap=MediaStore.Images.Media.getBitmap(getContentResolver(),uri);
+                bitmap=MediaStore.Images.Media.getBitmap(getContentResolver(),downloaduri);
             } catch (IOException e) {
                 e.printStackTrace();
             }

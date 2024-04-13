@@ -21,10 +21,12 @@ import java.util.List;
 public class TeacherAdapter extends RecyclerView.Adapter<TeacherAdapter.TeacherViewAdapter> {
      List<TeacherData> list;
      Context context;
+     String category;
 
-    public TeacherAdapter(List<TeacherData> list, Context context) {
+    public TeacherAdapter(List<TeacherData> list, Context context, String category) {
         this.list = list;
         this.context = context;
+        this.category=category;
     }
 
     @NonNull
@@ -48,6 +50,7 @@ public class TeacherAdapter extends RecyclerView.Adapter<TeacherAdapter.TeacherV
         holder.post.setText(item.getPost());
         holder.email.setText(item.getEmail());
         holder.number.setText(item.getNumber());
+        holder.qualification.setText(item.getQualification());
         try {
             Picasso.get().load(item.getImage()).into(holder.imageView);
         } catch (Exception e) {
@@ -59,18 +62,22 @@ public class TeacherAdapter extends RecyclerView.Adapter<TeacherAdapter.TeacherV
             public void onClick(View v) {
                 Intent intent=new Intent(context,UpdateTeacherActivity.class);
                 intent.putExtra("name",item.getName());
-                intent.putExtra("post",item.getName());
-                intent.putExtra("name",item.getName());
-                intent.putExtra("name",item.getName());
+                intent.putExtra("post",item.getPost());
+                intent.putExtra("email",item.getEmail());
+                intent.putExtra("mobile",item.getNumber());
+                intent.putExtra("qualification",item.getQualification());
+                intent.putExtra("image",item.getImage());
+                intent.putExtra("key",item.getKey());
+                intent.putExtra("category",category);
 
-
+                context.startActivity(intent);
             }
         });
 
     }
 
     public class TeacherViewAdapter extends RecyclerView.ViewHolder {
-        TextView name,post,email,number;
+        TextView name,post,email,number,qualification;
         Button update;
         ImageView imageView;
 
@@ -80,6 +87,7 @@ public class TeacherAdapter extends RecyclerView.Adapter<TeacherAdapter.TeacherV
             post=itemView.findViewById(R.id.teacherpost);
             email=itemView.findViewById(R.id.teacheremail);
             number=itemView.findViewById(R.id.teachernumber);
+            qualification=itemView.findViewById(R.id.teacherqualification);
             update=itemView.findViewById(R.id.teacherupdate);
             imageView=itemView.findViewById(R.id.teacherimage);
         }
