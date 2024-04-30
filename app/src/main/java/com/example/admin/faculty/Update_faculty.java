@@ -212,7 +212,7 @@ public class Update_faculty extends AppCompatActivity {
 
     }
 
-    private void ceDepartment() {
+    private void eeDepartment() {
         dbref=reference.child("EE");
         dbref.addValueEventListener(new ValueEventListener() {
             @Override
@@ -245,7 +245,7 @@ public class Update_faculty extends AppCompatActivity {
 
     }
 
-    private void eeDepartment() {
+    private void ceDepartment() {
         dbref=reference.child("CE");
         dbref.addValueEventListener(new ValueEventListener() {
             @Override

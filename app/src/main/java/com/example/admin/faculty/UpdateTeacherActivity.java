@@ -57,7 +57,7 @@ public class UpdateTeacherActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_update_teacher);
 
-        name=getIntent().getStringExtra("name");
+      name=getIntent().getStringExtra("name");
         post=getIntent().getStringExtra("post");
         email=getIntent().getStringExtra("email");
         number=getIntent().getStringExtra("mobile");

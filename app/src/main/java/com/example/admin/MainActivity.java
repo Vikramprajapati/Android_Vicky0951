@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity  {
         });
 
         registration.setOnClickListener(v -> {
-            Intent intent=new Intent(MainActivity.this, AddAccount.class);
+            Intent intent=new Intent(MainActivity.this, student_registration.class);
             startActivity(intent);
         });
 

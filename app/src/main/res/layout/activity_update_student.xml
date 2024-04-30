@@ -1,0 +1,340 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/light_gray"
+    tools:context=".Update_student">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="15dp"
+        android:orientation="vertical"
+        android:layout_margin="15dp"
+        android:background="#ffffff">
+
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/updateStudentImage"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:src="@drawable/teacher"
+            android:layout_gravity="center"
+            android:layout_marginTop="36dp"
+            />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:textColor="#555555"
+            android:layout_marginTop="50dp"
+            android:text="Full Name*"
+            android:textStyle="bold"
+            android:inputType="textPersonName"
+            android:textSize="16sp"
+            />
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:id="@+id/update_full_name"
+            android:hint="abc"
+            android:textSize="16sp"
+            android:padding="6dp"
+            android:layout_marginTop="10dp"
+
+            android:background="@drawable/border"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:textColor="#555555"
+            android:layout_marginTop="20dp"
+            android:text="Father's Name*"
+            android:textStyle="bold"
+
+            android:textSize="16sp"
+            />
+
+        <EditText
+            android:id="@+id/update_father_name"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+
+            android:layout_marginTop="10dp"
+            android:background="@drawable/border"
+            android:hint="abc"
+            android:padding="6dp"
+            android:textSize="16sp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:textColor="#555555"
+            android:layout_marginTop="20dp"
+            android:text="Email*"
+            android:textStyle="bold"
+            android:inputType="textEmailAddress"
+            android:textSize="16sp"
+            />
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:id="@+id/update_email"
+            android:hint="abc@gamil.com"
+            android:textSize="16sp"
+            android:padding="6dp"
+            android:layout_marginTop="10dp"
+
+            android:background="@drawable/border"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:textColor="#555555"
+            android:textStyle="bold"
+            android:layout_marginTop="20dp"
+            android:text="Mobile*"
+
+            android:textSize="16sp"
+            />
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:id="@+id/update_mobile"
+            android:hint="1234567890"
+            android:textSize="16sp"
+            android:padding="6dp"
+            android:inputType="phone"
+            android:layout_marginTop="10dp"
+
+            android:background="@drawable/border"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:textColor="#555555"
+            android:textStyle="bold"
+            android:layout_marginTop="20dp"
+            android:text="Parent's Mobile*"
+
+            android:textSize="16sp"
+            />
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:id="@+id/update_parent_mobile"
+            android:hint="1234567890"
+            android:textSize="16sp"
+            android:padding="6dp"
+            android:inputType="phone"
+            android:layout_marginTop="10dp"
+
+            android:background="@drawable/border"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:textColor="#555555"
+            android:textStyle="bold"
+            android:layout_marginTop="20dp"
+            android:text="Gender*"
+
+            android:textSize="16sp"
+            />
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:id="@+id/update_gender"
+            android:hint="male"
+            android:textSize="16sp"
+            android:padding="6dp"
+            android:inputType="text"
+            android:layout_marginTop="10dp"
+
+            android:background="@drawable/border"/>
+
+
+
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+
+            android:textColor="#555555"
+            android:layout_marginTop="20dp"
+            android:text="Date of Birth(dd/mm/yyyy)*"
+            android:textStyle="bold"
+            android:inputType="date"
+            android:textSize="16sp"
+            />
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:id="@+id/update_dob"
+            android:hint="01/01/1990"
+            android:textSize="16sp"
+            android:padding="6dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/border"/>
+
+
+        <Spinner
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/update_year"
+            android:spinnerMode="dropdown"
+            android:background="@android:drawable/btn_dropdown"
+            android:gravity="center"
+            android:layout_marginVertical="16dp">
+
+        </Spinner>
+        <Spinner
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/update_sem"
+            android:spinnerMode="dropdown"
+            android:background="@android:drawable/btn_dropdown"
+            android:gravity="center"
+            android:layout_marginVertical="16dp">
+
+        </Spinner>
+        <Spinner
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/update_branch"
+            android:spinnerMode="dropdown"
+            android:background="@android:drawable/btn_dropdown"
+            android:gravity="center"
+            android:layout_marginVertical="16dp">
+
+        </Spinner>
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:textColor="#555555"
+            android:layout_marginTop="10dp"
+            android:text="Address*"
+            android:textStyle="bold"
+
+            android:textSize="16sp"
+            />
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:id="@+id/update_address"
+            android:hint="abc"
+            android:textSize="16sp"
+            android:padding="6dp"
+            android:inputType="textPostalAddress"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/border"/>
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:textColor="#555555"
+            android:layout_marginTop="10dp"
+            android:text="Password*"
+            android:textStyle="bold"
+
+            android:textSize="16sp"
+            />
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:id="@+id/updater_password"
+            android:hint="abc"
+            android:textSize="16sp"
+            android:padding="6dp"
+            android:inputType="textPassword"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/border"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:layout_below="@id/editText_register_mobile"
+            android:textColor="#555555"
+            android:layout_marginTop="10dp"
+            android:text="Confirm Password*"
+            android:textStyle="bold"
+            android:inputType="date"
+            android:textSize="16sp"
+            />
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:id="@+id/update_conpassword"
+            android:hint="abc"
+            android:textSize="16sp"
+            android:padding="6dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/border"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+
+
+            <Button
+            android:id="@+id/updateStudent"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="30dp"
+            android:text="Update "/>
+            <Button
+                android:id="@+id/deleteBtn"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Delete"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="30dp"/>
+
+
+        </LinearLayout>
+
+        <ProgressBar
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/progressbar1"
+            android:layout_gravity="center"
+            android:elevation="10dp"
+            android:visibility="gone"/>
+
+
+    </LinearLayout>
+
+
+
+</ScrollView>
+

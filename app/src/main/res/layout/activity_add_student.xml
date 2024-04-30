@@ -1,0 +1,323 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/light_gray"
+    tools:context=".AddStudent">
+
+
+   <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="15dp"
+       android:orientation="vertical"
+        android:layout_margin="15dp"
+        android:background="#ffffff">
+
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/addStudentImage"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:src="@drawable/teacher"
+            android:layout_gravity="center"
+            android:layout_marginTop="36dp"
+            />
+
+       <TextView
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+
+           android:textColor="#555555"
+           android:layout_marginTop="50dp"
+           android:text="Full Name*"
+           android:textStyle="bold"
+           android:inputType="textPersonName"
+           android:textSize="16sp"
+           />
+
+       <EditText
+           android:layout_width="match_parent"
+           android:layout_height="40dp"
+           android:id="@+id/editText_register_full_name"
+           android:hint="abc"
+           android:textSize="16sp"
+           android:padding="6dp"
+           android:layout_marginTop="10dp"
+
+           android:background="@drawable/border"/>
+
+       <TextView
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+
+           android:textColor="#555555"
+           android:layout_marginTop="20dp"
+           android:text="Father's Name*"
+           android:textStyle="bold"
+
+           android:textSize="16sp"
+           />
+
+       <EditText
+           android:id="@+id/editText_register_father_name"
+           android:layout_width="match_parent"
+           android:layout_height="40dp"
+
+           android:layout_marginTop="10dp"
+           android:background="@drawable/border"
+           android:hint="abc"
+           android:padding="6dp"
+           android:textSize="16sp" />
+
+       <TextView
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+
+           android:textColor="#555555"
+           android:layout_marginTop="20dp"
+           android:text="Email*"
+           android:textStyle="bold"
+           android:inputType="textEmailAddress"
+           android:textSize="16sp"
+           />
+
+       <EditText
+           android:layout_width="match_parent"
+           android:layout_height="40dp"
+           android:id="@+id/editText_register_email"
+           android:hint="abc@gamil.com"
+           android:textSize="16sp"
+           android:padding="6dp"
+           android:layout_marginTop="10dp"
+
+           android:background="@drawable/border"/>
+
+       <TextView
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+
+           android:textColor="#555555"
+           android:textStyle="bold"
+           android:layout_marginTop="20dp"
+           android:text="Mobile*"
+
+           android:textSize="16sp"
+           />
+
+       <EditText
+           android:layout_width="match_parent"
+           android:layout_height="40dp"
+           android:id="@+id/editText_register_mobile"
+           android:hint="1234567890"
+           android:textSize="16sp"
+           android:padding="6dp"
+           android:inputType="phone"
+           android:layout_marginTop="10dp"
+
+           android:background="@drawable/border"/>
+
+       <TextView
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+
+           android:textColor="#555555"
+           android:textStyle="bold"
+           android:layout_marginTop="20dp"
+           android:text="Parent's Mobile*"
+
+           android:textSize="16sp"
+           />
+
+       <EditText
+           android:layout_width="match_parent"
+           android:layout_height="40dp"
+           android:id="@+id/editText_register_parent_mobile"
+           android:hint="1234567890"
+           android:textSize="16sp"
+           android:padding="6dp"
+           android:inputType="phone"
+           android:layout_marginTop="10dp"
+
+           android:background="@drawable/border"/>
+
+       <TextView
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+
+           android:textColor="#555555"
+           android:textStyle="bold"
+           android:layout_marginTop="20dp"
+           android:text="Gender*"
+
+           android:textSize="16sp"
+           />
+
+       <EditText
+           android:layout_width="match_parent"
+           android:layout_height="40dp"
+           android:id="@+id/editText_register_gender"
+           android:hint="male"
+           android:textSize="16sp"
+           android:padding="6dp"
+           android:inputType="text"
+           android:layout_marginTop="10dp"
+
+           android:background="@drawable/border"/>
+
+
+
+
+
+       <TextView
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+
+           android:layout_below="@id/editText_register_mobile"
+           android:textColor="#555555"
+           android:layout_marginTop="10dp"
+           android:text="Date of Birth(dd/mm/yyyy)*"
+           android:textStyle="bold"
+           android:inputType="date"
+           android:textSize="16sp"
+           />
+
+       <EditText
+           android:layout_width="match_parent"
+           android:layout_height="40dp"
+           android:id="@+id/editText_register_dob"
+           android:hint="01/01/1990"
+           android:textSize="16sp"
+           android:padding="6dp"
+           android:layout_marginTop="10dp"
+           android:background="@drawable/border"/>
+
+
+       <Spinner
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:id="@+id/year_category2"
+           android:spinnerMode="dropdown"
+           android:background="@android:drawable/btn_dropdown"
+           android:gravity="center"
+           android:layout_marginVertical="16dp">
+
+       </Spinner>
+       <Spinner
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:id="@+id/branch_category2"
+           android:spinnerMode="dropdown"
+           android:background="@android:drawable/btn_dropdown"
+           android:gravity="center"
+           android:layout_marginVertical="16dp">
+
+       </Spinner>
+       <Spinner
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:id="@+id/sem_category2"
+           android:spinnerMode="dropdown"
+           android:background="@android:drawable/btn_dropdown"
+           android:gravity="center"
+           android:layout_marginVertical="16dp">
+
+       </Spinner>
+
+       <TextView
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+
+           android:textColor="#555555"
+           android:layout_marginTop="10dp"
+           android:text="Address*"
+           android:textStyle="bold"
+
+           android:textSize="16sp"
+           />
+
+       <EditText
+           android:layout_width="match_parent"
+           android:layout_height="40dp"
+           android:id="@+id/editText_register_address"
+           android:hint="abc"
+           android:textSize="16sp"
+           android:padding="6dp"
+           android:inputType="textPostalAddress"
+           android:layout_marginTop="10dp"
+           android:background="@drawable/border"/>
+
+
+       <TextView
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+
+           android:textColor="#555555"
+           android:layout_marginTop="10dp"
+           android:text="Password*"
+           android:textStyle="bold"
+
+           android:textSize="16sp"
+           />
+
+       <EditText
+           android:layout_width="match_parent"
+           android:layout_height="40dp"
+           android:id="@+id/editText_register_password"
+           android:hint="abc"
+           android:textSize="16sp"
+           android:padding="6dp"
+           android:inputType="textPassword"
+           android:layout_marginTop="10dp"
+           android:background="@drawable/border"/>
+
+       <TextView
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+
+           android:layout_below="@id/editText_register_mobile"
+           android:textColor="#555555"
+           android:layout_marginTop="10dp"
+           android:text="Confirm Password*"
+           android:textStyle="bold"
+           android:inputType="date"
+           android:textSize="16sp"
+           />
+
+       <EditText
+           android:layout_width="match_parent"
+           android:layout_height="40dp"
+           android:id="@+id/editText_register_conpassword"
+           android:hint="abc"
+           android:textSize="16sp"
+           android:padding="6dp"
+           android:layout_marginTop="10dp"
+           android:background="@drawable/border"/>
+
+
+<Button
+    android:id="@+id/addStudent"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="70dp"
+    android:layout_marginRight="70dp"
+    android:layout_marginTop="30dp"
+    android:text="Add Student"/>
+
+       <ProgressBar
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:id="@+id/progressbar"
+         android:layout_gravity="center"
+           android:elevation="10dp"
+           android:visibility="gone"/>
+
+
+   </LinearLayout>
+
+
+
+</ScrollView>
+

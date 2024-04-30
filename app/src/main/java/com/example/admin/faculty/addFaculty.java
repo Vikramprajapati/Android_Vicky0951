@@ -46,8 +46,8 @@ public class addFaculty extends AppCompatActivity {
     EditText addTeacherEmail,addTeacherPost,addTeacherName,addTeacherNumber,addTeacherExp,addTeacherQualification;
     Spinner addteacherDepartment;
     String[] item={"Select Department","CSE","EE","CE","ME","Admin","Account"};
-    String[] item2={"Select Qualification","M.Tech","B.Tech","PHD","ME","B.Sc","M.Sc"};
-    String name,post,email,downloadUrl="",number,exp,qualification;
+
+    String name,post,email,downloadUrl="",number,qualification;
     Button addTeacher;
     Uri downloaduri;
     ProgressDialog pd;
@@ -164,8 +164,8 @@ public class addFaculty extends AppCompatActivity {
             public void onSuccess(Void unused) {
                 pd.dismiss();
                 Toast.makeText(addFaculty.this,"Teacher Added",Toast.LENGTH_SHORT).show();
-                Intent intent=new Intent();
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                Intent intent=new Intent(addFaculty.this,Update_faculty.class);
+
                 startActivity(intent);
             }
         }).addOnFailureListener(new OnFailureListener() {

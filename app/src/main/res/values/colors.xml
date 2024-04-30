@@ -9,9 +9,14 @@
     <color name="green1">#00bfa5</color>
     <color name="pink">#FF5CCD</color>
     <color name="red">#ED1961</color>
+    <color name="light_gray">#c1c1c1</color>
     <color name="lightgray">#c1c1c1</color>
     <color name="purple_700">#FF3700B3</color>
     <color name="black">#FF000000</color>
+    <color name="primary">#1784DC</color>
+    <color name="purple_500">#a46ede</color>
+    <color name="my_primary">#5E35B1</color>
+    <color name="my_secondary">#673AB7</color>
 
 
 </resources>

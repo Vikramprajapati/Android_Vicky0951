@@ -11,7 +11,8 @@ public class TeacherData {
     String exp;
     String key;
 
-    public TeacherData() {
+    public TeacherData(){
+
     }
 
     public String getQualification() {
