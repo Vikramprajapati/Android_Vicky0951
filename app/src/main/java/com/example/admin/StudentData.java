@@ -2,14 +2,14 @@ package com.example.admin;
 
 public class StudentData {
 
-    String fullName,fatherName,email,mobile,password,conPassword,parentMobile,DOB,address,image,gender,key,sem,branch;
+    String fatherName,email,mobile,password,conPassword,parentMobile,DOB,address,image,gender,key,sem,branch;
 
 
     public StudentData() {
     }
 
-    public StudentData(String fullName, String fatherName, String email, String mobile, String password, String parentMobile, String DOB,String sem,String branch, String address, String image, String gender, String key){
-        this.fullName = fullName;
+    public StudentData( String fatherName, String email, String mobile, String password, String parentMobile, String DOB,String sem,String branch, String address, String image, String gender){
+
         this.fatherName = fatherName;
         this.email = email;
         this.mobile = mobile;
@@ -26,13 +26,8 @@ this.branch=branch;
 
 }
 
-    public String getFullName() {
-        return fullName;
-    }
 
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
-    }
+
 
     public String getFatherName() {
         return fatherName;
