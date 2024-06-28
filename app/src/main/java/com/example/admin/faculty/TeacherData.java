@@ -8,7 +8,7 @@ public class TeacherData {
 
     String number;
     String qualification;
-    String exp;
+    String password,conPassword;
     String key;
 
     public TeacherData(){
@@ -20,14 +20,17 @@ public class TeacherData {
     }
 
 
+    public TeacherData(String password) {
+        this.password = password;
+    }
 
-    public TeacherData(String name, String post, String email, String number, String key, String image, String qualification) {
+    public TeacherData(String name, String post, String email, String number,  String image, String qualification, String password) {
         this.name = name;
         this.post = post;
         this.email = email;
         this.number = number;
 
-        this.key = key;
+
         this.image = image;
         this.qualification=qualification;
 
@@ -65,21 +68,25 @@ public class TeacherData {
         this.number = number;
     }
 
-    public String getExp() {
-        return exp;
-    }
 
-    public void setExp(String exp) {
-        this.exp = exp;
-    }
 
     public String getKey() {
         return key;
     }
 
-    public void setKey(String key) {
-        this.key = key;
+    public void setQualification(String qualification) {
+        this.qualification = qualification;
     }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+
     public String getImage() {
         return image;
     }

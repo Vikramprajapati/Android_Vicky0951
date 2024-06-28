@@ -18,6 +18,15 @@
         android:theme="@style/Theme.ADMIN"
         tools:targetApi="31">
         <activity
+            android:name=".faculty.TeacherUpdate"
+            android:exported="false" />
+        <activity
+            android:name=".faculty.TeacherLogin"
+            android:exported="false" />
+        <activity
+            android:name=".notice.DeleteNotice"
+            android:exported="false" />
+        <activity
             android:name=".Student_Profile"
             android:exported="false" />
         <activity
@@ -63,7 +72,7 @@
             android:name=".faculty.addFaculty"
             android:exported="false" />
         <activity
-            android:name=".faculty.Update_faculty"
+            android:name=".faculty.Faculties"
             android:exported="false" />
         <activity
             android:name=".Upload_pdf"
@@ -75,7 +84,7 @@
             android:name=".faculty.UpdateTeacherActivity"
             android:exported="false" />
         <activity
-            android:name=".Upload_notice"
+            android:name=".notice.Upload_notice"
             android:exported="false" />
         <activity
             android:name=".MainActivity"

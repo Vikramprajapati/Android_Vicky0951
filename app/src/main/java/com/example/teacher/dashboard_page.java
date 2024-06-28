@@ -6,13 +6,8 @@ import android.os.Bundle;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
-import com.example.admin.MainActivity;
 import com.example.admin.R;
-import com.example.admin.Upload_notice;
 
 public class dashboard_page extends AppCompatActivity {
  CardView attendance1,marks1,table1,assignment1;

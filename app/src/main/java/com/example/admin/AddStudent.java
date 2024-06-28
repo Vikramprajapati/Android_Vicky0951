@@ -1,10 +1,11 @@
 package com.example.admin;
 
-import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -19,8 +20,6 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -28,34 +27,18 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.EmployeeInfo;
-import com.example.admin.faculty.TeacherData;
-import com.example.admin.faculty.Update_faculty;
-import com.example.admin.faculty.addFaculty;
-import com.example.teacher.upload_assignment;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.Firebase;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
-import com.google.firebase.auth.FirebaseAuthUserCollisionException;
-import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.database.core.Tag;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-
-import org.checkerframework.checker.units.qual.A;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -72,7 +55,7 @@ public class AddStudent extends AppCompatActivity {
     Spinner spin_year, spin_branch, spin_sem;
     String year, branch, sem;
 
-DatePickerDialog picker;
+DatePickerDialog.OnDateSetListener mDateSetListener;
 
     Bitmap bitmap = null;
 
@@ -234,6 +217,34 @@ DatePickerDialog picker;
 
 
                 //set datepicker on edittext
+
+                AddDOB.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Calendar cal=Calendar.getInstance();
+                        int year=cal.get(Calendar.YEAR);
+                        int month=cal.get(Calendar.MONTH);
+                        int day=cal.get(Calendar.DAY_OF_MONTH);
+
+                        DatePickerDialog dialog=new DatePickerDialog(
+                                AddStudent.this, android.R.style.Theme_Holo_Light_Dialog_MinWidth,
+                                mDateSetListener,
+                                year,month,day);
+                        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                        dialog.show();
+
+                    }
+                });
+                mDateSetListener=new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+                        month=month+1;
+                        Log.d(TAG,"onDataSet: mm/dd/yyyy:  " +month + "/" +day+ "/" +year);
+                        String date=month+"/"+day+"/"+year;
+                        AddDOB.setText(date);
+
+                    }
+                };
 
 
 
@@ -476,29 +487,6 @@ DatePickerDialog picker;
 
 
 
-                }// ckeck weak password and email already exist in firebase
-                else {
-                    try {
-                        throw task.getException();
-
-                    }catch (FirebaseAuthWeakPasswordException e){
-                        Addpassword.setError("Your password is too weak.Kindly use a mix of alphabets, numbers and special character");
-                        Addpassword.requestFocus();
-                    }
-                    catch (FirebaseAuthInvalidCredentialsException e){
-                        Addemail.setError("Your Email is invalid or already in use. Kindly re-enter");
-                        Addemail.requestFocus();
-                    }
-                    catch (FirebaseAuthUserCollisionException  e){
-                        Addemail.setError("User is already registered with this email. Use another email.");
-                        Addemail.requestFocus();
-                    }catch (Exception e){
-
-                        Log.e(TAG, e.getMessage());
-                        Toast.makeText(AddStudent.this,e.getMessage(),Toast.LENGTH_LONG).show();
-
-                    }
-                    pd.dismiss();
                 }
 
 

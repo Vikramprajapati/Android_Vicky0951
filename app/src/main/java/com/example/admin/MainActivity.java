@@ -8,11 +8,13 @@ import android.view.View;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 
-import com.example.admin.faculty.Update_faculty;
+import com.example.admin.faculty.Faculties;
+import com.example.admin.notice.DeleteNotice;
+import com.example.admin.notice.Upload_notice;
 
 public class MainActivity extends AppCompatActivity  {
 
-    CardView notice,gallery,faculty,Ebook,registration;
+    CardView notice,gallery,faculty,Ebook,registration,delete;
     @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,6 +25,16 @@ public class MainActivity extends AppCompatActivity  {
        faculty=findViewById(R.id.faculty);
        Ebook=findViewById(R.id.addEbook);
        registration=findViewById(R.id.registration);
+       delete=findViewById(R.id.deleteNotice);
+
+
+       delete.setOnClickListener(new View.OnClickListener() {
+           @Override
+           public void onClick(View v) {
+               Intent intent=new Intent(MainActivity.this, DeleteNotice.class);
+               startActivity(intent);
+           }
+       });
 
         notice.setOnClickListener(v -> {
             Intent intent=new Intent(MainActivity.this, Upload_notice.class);
@@ -49,7 +61,7 @@ public class MainActivity extends AppCompatActivity  {
         faculty.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(MainActivity.this, Update_faculty.class);
+                Intent intent=new Intent(MainActivity.this, Faculties.class);
                 startActivity(intent);
             }
         });
