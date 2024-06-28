@@ -189,7 +189,7 @@
            android:layout_height="40dp"
            android:id="@+id/editText_register_dob"
            android:hint="01/01/1990"
-           android:focusable="false"
+           android:focusable="true"
            android:textSize="16sp"
            android:padding="6dp"
            android:layout_marginTop="10dp"

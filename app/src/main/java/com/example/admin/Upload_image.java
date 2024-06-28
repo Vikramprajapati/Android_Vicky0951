@@ -29,10 +29,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewSwitcher;
 
+import com.example.admin.notice.NoticeData;
+import com.example.admin.notice.Upload_notice;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.SetOptions;
@@ -40,6 +44,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -47,14 +52,23 @@ import java.util.Calendar;
 import java.util.UUID;
 
 public class Upload_image extends AppCompatActivity {
-    CardView cardView;
-    ImageSwitcher imageSwitcher;
-    TextView imagetitle;
-    Button next,previous,upload;
-    ArrayList<Uri> imageUris;
-    int position;
-    ProgressDialog pd;
-    Bitmap bitmap;
+
+
+   Spinner imageCategory;
+   CardView selectImage;
+   ImageView imageView;
+
+   Button upload;
+   String category;
+   ProgressDialog pd;
+
+   Bitmap bitmap;
+
+   StorageReference storageReference;
+   DatabaseReference reference;
+   String downloadUrl;
+
+    ArrayList<String> items = new ArrayList<>();
 
 
     @Override
@@ -62,64 +76,47 @@ public class Upload_image extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_upload_image);
 
-        pd=new ProgressDialog(this);
+       selectImage=findViewById(R.id.addGalleryImage);
+       imageCategory=findViewById(R.id.imageCategory);
+       upload=findViewById(R.id.uploadImageBtn);
+        imageView = findViewById(R.id.galleryImageView);
+       pd=new ProgressDialog(this);
+       reference=FirebaseDatabase.getInstance().getReference().child("Gallery");
+       storageReference=FirebaseStorage.getInstance().getReference().child("Gallery");
 
-        cardView=findViewById(R.id.addGalleryImage);
-        next=findViewById(R.id.next);
-        previous=findViewById(R.id.previous);
-        imageSwitcher=findViewById(R.id.imageIs);
-        upload=findViewById(R.id.uploadImageBtn);
-        imagetitle=findViewById(R.id.imagetitle);
+        items.add("Select Category");
+        items.add("Convocation");
+        items.add("Tarunya");
+        items.add("Lakshya");
+        items.add("Independence Day");
+        items.add("Republic Day");
+        items.add(" CIT Campus");
+        items.add("Others");
 
-        imageUris=new ArrayList<>();
+        // setting the values in spinner 1
+        ArrayAdapter<String> adapter1 = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, items);
+        adapter1.setDropDownViewResource(android.R.layout.select_dialog_singlechoice);
+        imageCategory.setAdapter(adapter1);
 
 
-        imageSwitcher.setFactory(new ViewSwitcher.ViewFactory() {
+        imageCategory.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public View makeView() {
-                ImageView imageView=new ImageView(getApplicationContext());
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
-                return imageView;
+                category=imageCategory.getSelectedItem().toString();
+
             }
-        });
 
-        cardView.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                Intent intent = new Intent();
-                intent.setType("image/*");
-                intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
-                intent.setAction(Intent.ACTION_GET_CONTENT);
-                startActivityForResult(Intent.createChooser(intent,"Select Picture"), 1);
-            }
-        });
-
-        previous.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(position>0){
-                    position--;
-                    imageSwitcher.setImageURI(imageUris.get(position));
-                }
-                else {
-                    Toast.makeText(Upload_image.this,"No Preious Images...",Toast.LENGTH_SHORT).show();
-                }
+            public void onNothingSelected(AdapterView<?> parent) {
 
             }
         });
 
-        next.setOnClickListener(new View.OnClickListener() {
+        selectImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(position<imageUris.size()-1){
-                    position++;
-                    imageSwitcher.setImageURI(imageUris.get(position));
-                }
-                else {
-                    Toast.makeText(Upload_image.this,"No Next Images...",Toast.LENGTH_SHORT).show();
-                }
-
-
+                openGallery();
             }
         });
 
@@ -127,12 +124,17 @@ public class Upload_image extends AppCompatActivity {
         upload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(imagetitle.getText().toString().isEmpty()){
-                    imagetitle.setError("Empty");
-                    imagetitle.requestFocus();
+                if(bitmap==null){
+                    Toast.makeText(Upload_image.this,"Please  Select Image",Toast.LENGTH_SHORT).show();
+                } else if (category.equals("Select Category")) {
+                    Toast.makeText(Upload_image.this,"Please  Select Image category",Toast.LENGTH_SHORT).show();
                 }
                 else {
-                    uploadImages(new ArrayList<>());
+                    pd.setTitle("Please wait...");
+                    pd.setMessage("Uploading");
+                    pd.show();
+                    uploadImage();
+
                 }
             }
         });
@@ -140,66 +142,79 @@ public class Upload_image extends AppCompatActivity {
 
     }
 
-    private void uploadImages(ArrayList<String> imageUrlList) {
-        pd.setTitle("Please wait...");
-        pd.setMessage("Uploading Images...");
-        pd.show();
-        StorageReference refrence2=FirebaseStorage.getInstance().getReference().child("images").child(UUID.randomUUID().toString());
-        Uri uri=imageUris.get(imageUrlList.size());
-        refrence2.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+    private void uploadImage() {
+        ByteArrayOutputStream baos=new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG,50,baos);
+        byte[] finalimg= baos.toByteArray();
+        final StorageReference filepath;
+        filepath=storageReference.child(finalimg+"jpg");
+        final UploadTask uploadTask=filepath.putBytes(finalimg);
+        uploadTask.addOnCompleteListener(Upload_image.this, new OnCompleteListener<UploadTask.TaskSnapshot>() {
             @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                refrence2.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Uri> task) {
-                        String url=task.getResult().toString();
-                        imageUrlList.add(url);
+            public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                if(task.isSuccessful()){
+                    uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            filepath.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                @Override
+                                public void onSuccess(Uri uri) {
+                                    downloadUrl=String.valueOf(uri);
+                                    uploadData();
+                                }
+                            });
+                        }
+                    });
+                }
+                else {
+                    pd.dismiss();
+                    Toast.makeText(Upload_image.this,"Something Went Wrong",Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
 
-                        if(imageUris.size()==imageUrlList.size()){
-                            pd.dismiss();
-                            Toast.makeText(Upload_image.this,"Images Uploaded Successfully",Toast.LENGTH_SHORT).show();
-                            upload.setText("Upload Images");
-                            upload.setEnabled(true);
-                        }
-                        else {
-                            uploadImages(imageUrlList);
-                        }
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        pd.dismiss();
-                        Toast.makeText(Upload_image.this,"Failed to upload images",Toast.LENGTH_SHORT).show();
-                    }
-                });
+    private void uploadData() {
+        reference=reference.child(category);
+        final String uniqueKey=reference.push().getKey();
+
+        ImageData imageData=new ImageData(downloadUrl);
+        reference.child(uniqueKey).setValue(imageData).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void unused) {
+                pd.dismiss();
+                Toast.makeText(Upload_image.this,"Image Uploaded Successfully",Toast.LENGTH_SHORT).show();
+
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                pd.dismiss();
+                Toast.makeText(Upload_image.this,"Something Went Wrong",Toast.LENGTH_SHORT).show();
             }
         });
 
+
+    }
+
+    private void openGallery() {
+        Intent i=new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(i,1);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode==1){
-            if(resultCode==Activity.RESULT_OK){
-                if(data.getClipData() !=null){
-                    int count=data.getClipData().getItemCount();
-                    for(int i=0;i<count;i++){
-                        Uri imageUri=data.getClipData().getItemAt(i).getUri();
-                        imageUris.add(imageUri);
-
-                    }
-
-                    imageSwitcher.setImageURI(imageUris.get(0));
-                    int position=0;
-                }
-                else {
-                    Uri imageUri=data.getData();
-                    imageUris.add(imageUri);
-                    imageSwitcher.setImageURI(imageUris.get(0));
-                    int position=0;
-                }
+        if(requestCode==1 && resultCode==RESULT_OK ){
+            Uri uri=data.getData();
+            try {
+                bitmap=MediaStore.Images.Media.getBitmap(getContentResolver(),uri);
+            } catch (IOException e) {
+                e.printStackTrace();
             }
+
+            imageView.setImageBitmap(bitmap);
         }
     }
+
 }
