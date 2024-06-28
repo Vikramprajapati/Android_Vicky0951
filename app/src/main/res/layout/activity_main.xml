@@ -5,9 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity"
-    android:orientation="vertical"
-
-    >
+    android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -188,10 +186,8 @@
             </TextView>
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
-
-
-
 </LinearLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -249,7 +245,6 @@
                 </TextView>
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
-
         <com.google.android.material.card.MaterialCardView
             android:layout_width="130dp"
             android:layout_height="150dp"
@@ -290,7 +285,64 @@
         </com.google.android.material.card.MaterialCardView>
 
     </LinearLayout>
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="130dp"
+            android:layout_height="150dp"
+            android:layout_marginTop="30dp"
+            android:layout_gravity="center"
+            android:id="@+id/upload_student_details"
+            app:cardElevation="5dp">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:gravity="center">
+                <ImageView
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
+                    android:background="@drawable/circle_red"
+                    android:src="@drawable/attendance_icon"
+                    android:padding="15dp">
 
-    </LinearLayout>
+                </ImageView>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@color/light_gray">
+                </View>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Upload Student "
+                    android:textStyle="bold"
+                    android:padding="5dp"
+                    android:layout_marginBottom="-10dp"
+
+                    android:layout_marginTop="10dp"
+                    android:textColor="@color/textColor">
+
+                </TextView>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Details"
+                    android:textStyle="bold"
+                    android:padding="5dp"
+
+
+                    android:textColor="@color/textColor">
+
+                </TextView>
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+
+
+
+
+</LinearLayout>
+
+
 
 </ScrollView>
