@@ -1,0 +1,66 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    tools:context="com.example.teacher.ViewAttendance">
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="20dp"
+    android:layout_margin="10dp"
+    android:orientation="vertical">
+    <Spinner
+        android:id="@+id/year"
+        android:layout_width="match_parent"
+        android:layout_marginBottom="15dp"
+        android:layout_height="wrap_content"/>
+
+    <Spinner
+        android:id="@+id/branch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="15dp"
+        android:layout_below="@id/year"/>
+
+    <Spinner
+        android:id="@+id/sem"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="15dp"
+        android:layout_below="@id/branch"/>
+
+    <Spinner
+        android:id="@+id/subject"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="15dp"
+        android:layout_below="@id/sem"/>
+</LinearLayout>
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="170dp"
+    android:orientation="horizontal">
+    <Button
+        android:id="@+id/uploadAttendance"
+        android:layout_width="150dp"
+        android:layout_margin="20dp"
+        android:layout_height="55dp"
+        android:text="Upload Attendance" />
+
+    <Button
+        android:id="@+id/takeattendance"
+        android:layout_width="150dp"
+        android:layout_height="55dp"
+        android:layout_margin="20dp"
+        android:paddingLeft="10dp"
+        android:text="View Attendance"/>
+</LinearLayout>
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_marginTop="270dp"
+        android:id="@+id/recyclerViewAttendance"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+</RelativeLayout>
