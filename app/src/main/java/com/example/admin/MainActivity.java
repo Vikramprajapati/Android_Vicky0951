@@ -12,7 +12,7 @@ import com.example.admin.faculty.Update_faculty;
 
 public class MainActivity extends AppCompatActivity  {
 
-    CardView notice,gallery,faculty,Ebook,registration;
+    CardView notice,gallery,faculty,Ebook,registration,details_student;
     @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,6 +23,7 @@ public class MainActivity extends AppCompatActivity  {
        faculty=findViewById(R.id.faculty);
        Ebook=findViewById(R.id.addEbook);
        registration=findViewById(R.id.registration);
+       details_student = findViewById(R.id.upload_student_details);
 
         notice.setOnClickListener(v -> {
             Intent intent=new Intent(MainActivity.this, Upload_notice.class);
@@ -50,6 +51,13 @@ public class MainActivity extends AppCompatActivity  {
             @Override
             public void onClick(View v) {
                 Intent intent=new Intent(MainActivity.this, Update_faculty.class);
+                startActivity(intent);
+            }
+        });
+        details_student.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(MainActivity.this, upload_student_details.class);
                 startActivity(intent);
             }
         });
