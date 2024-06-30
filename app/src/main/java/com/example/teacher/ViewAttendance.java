@@ -1,5 +1,6 @@
 package com.example.teacher;
 
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
@@ -13,6 +14,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -31,6 +33,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 public class ViewAttendance extends AppCompatActivity {
 
@@ -38,11 +41,13 @@ public class ViewAttendance extends AppCompatActivity {
 
     Spinner year, branch, sem, subject;
     Button uploadAttendance,viewattendance,takeattendance;
+    private Button buttonSelectDate1;
+    TextView textViewSelectedDate1;
     ArrayList<String> yearn = new ArrayList<>();
     ArrayList<String> branchn = new ArrayList<>();
     ArrayList<String> semn = new ArrayList<>();
     ArrayList<String> subjectn = new ArrayList<>();
-    private String selectedYear,selectedBranch,selectedSemester,selectedSubject ;
+    private String selectedYear,selectedBranch,selectedSemester,selectedSubject,selectedDate1 ;
 
     private DBHelper dbHelper;
     private RecyclerView recyclerView;
@@ -78,6 +83,8 @@ public class ViewAttendance extends AppCompatActivity {
         uploadAttendance = findViewById(R.id.uploadAttendance);
         viewattendance = findViewById(R.id.viewattendance);
         takeattendance=findViewById(R.id.takeattendance);
+        buttonSelectDate1 = findViewById(R.id.buttonSelectDate1);
+        textViewSelectedDate1=findViewById(R.id.textViewSelectedDate1);
 
         dbHelper = new DBHelper(this);
 //        recyclerView = findViewById(R.id.recyclerViewAttendance);
@@ -85,7 +92,12 @@ public class ViewAttendance extends AppCompatActivity {
           ArrayList<Attendance> attendanceList = new ArrayList<>();
 //        adapter = new AttendanceAdapter(this, attendanceList);
 //        recyclerView.setAdapter(adapter);
-
+        buttonSelectDate1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDatePickerDialog();
+            }
+        });
         // Add data to spinners
         yearn.add("Select Year");
         yearn.add("4");
@@ -478,8 +490,8 @@ public class ViewAttendance extends AppCompatActivity {
               selectedSubject = subject.getSelectedItem() != null ? subject.getSelectedItem().toString() : "";
               Log.d("ViewAttendance", "Selected Criteria: Year=" + selectedYear + ", Branch=" + selectedBranch +
                       ", Semester=" + selectedSemester + ", Subject=" + selectedSubject);
-              if (!selectedYear.equals("Select Year") && !selectedBranch.equals("choose Branch") && !selectedSemester.equals("choose sem") && !selectedSubject.equals("choose subject")) {
-                  Cursor cursor = dbHelper.getFilteredAttendance(selectedBranch, selectedYear, selectedSubject);
+              if (!selectedYear.equals("Select Year") && !selectedBranch.equals("choose Branch") && !selectedSemester.equals("choose sem") && !selectedSubject.equals("choose subject")&&selectedDate1 != null) {
+                  Cursor cursor = dbHelper.getFilteredAttendance(selectedBranch, selectedYear, selectedSubject,selectedDate1);
                   attendanceList.clear();
                   // Clear the attendance list before adding new items
                   Log.d("ViewAttendance", "Cursor count: " + cursor.getCount());
@@ -489,10 +501,10 @@ public class ViewAttendance extends AppCompatActivity {
                           String rollNo = cursor.getString(cursor.getColumnIndexOrThrow(DBHelper.COLUMN_ATTENDANCE_ROLL_NO));
                           String name = cursor.getString(cursor.getColumnIndexOrThrow(DBHelper.COLUMN_ATTENDANCE_NAME));
                           String status = cursor.getString(cursor.getColumnIndexOrThrow(DBHelper.COLUMN_ATTENDANCE_STATUS));
-                          String date=cursor.getString(cursor.getColumnIndexOrThrow(DBHelper.COLUMN_ATTENDANCE_DATE));
-                          Log.d("ViewAttendance", "Attendance Record: RollNo=" + rollNo + ", Name=" + name + ", Date=" + date + ", Status=" + status);
+//                          String date=cursor.getString(cursor.getColumnIndexOrThrow(DBHelper.COLUMN_ATTENDANCE_DATE));
+                          Log.d("ViewAttendance", "Attendance Record: RollNo=" + rollNo + ", Name=" + name + " Status=" + status);
 //                                if (subject.equals(subj)) {
-                          attendanceList.add(new Attendance(rollNo, name,date, status));
+                          attendanceList.add(new Attendance(rollNo, name, status));
 //
                       } while (cursor.moveToNext());
                   }
@@ -511,6 +523,7 @@ public class ViewAttendance extends AppCompatActivity {
                       intent.putExtra("selectedBranch", selectedBranch);
                       intent.putExtra("selectedSemester", selectedSemester);
                       intent.putExtra("selectedSubject", selectedSubject);
+                      intent.putExtra(("selectedDate1"),selectedDate1);
                       intent.putParcelableArrayListExtra("attendanceList", attendanceList);
                       startActivity(intent);
                       // Update the adapter with the new data
@@ -519,7 +532,7 @@ public class ViewAttendance extends AppCompatActivity {
 
 
               } else {
-                  Toast.makeText(ViewAttendance.this, "Please select all criteria", Toast.LENGTH_SHORT).show();
+                  Toast.makeText(ViewAttendance.this, "Please select all criteria and date", Toast.LENGTH_SHORT).show();
               }
           }
         });
@@ -618,5 +631,18 @@ public class ViewAttendance extends AppCompatActivity {
         ArrayAdapter<String> adapter4 = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, subjectn);
         adapter4.setDropDownViewResource(android.R.layout.select_dialog_singlechoice);
         subject.setAdapter(adapter4);
+    }
+    private void showDatePickerDialog() {
+        DatePickerDialog datePickerDialog = new DatePickerDialog(this,
+                new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                        selectedDate1 = dayOfMonth + "/" + (month + 1) + "/" + year;
+                        textViewSelectedDate1.setText("Selected Date: " + selectedDate1);
+                    }
+                }, Calendar.getInstance().get(Calendar.YEAR),
+                Calendar.getInstance().get(Calendar.MONTH),
+                Calendar.getInstance().get(Calendar.DAY_OF_MONTH));
+        datePickerDialog.show();
     }
 }

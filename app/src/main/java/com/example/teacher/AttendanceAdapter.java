@@ -70,7 +70,7 @@ public class AttendanceAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         TextView textViewRollNo;
         TextView textViewName;
-        TextView textViewDate;
+//        TextView textViewDate;
         TextView textViewSubject;
         TextView textViewStatus;
 
@@ -80,7 +80,7 @@ public class AttendanceAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             super(itemView);
             textViewRollNo = itemView.findViewById(R.id.textViewRollNo);
             textViewName = itemView.findViewById(R.id.textViewName);
-            textViewDate = itemView.findViewById(R.id.textViewDate);
+//            textViewDate = itemView.findViewById(R.id.textViewDate);
 //            textViewSubject = itemView.findViewById(R.id.textViewSubject);
             textViewStatus = itemView.findViewById(R.id.textViewStatus);
         }
@@ -88,7 +88,7 @@ public class AttendanceAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             public void bind (Attendance attendance){
                 textViewRollNo.setText(attendance.getRollNo());
                 textViewName.setText(attendance.getName());
-                textViewDate.setText(attendance.getDate());
+//                textViewDate.setText(attendance.getDate());
 //                textViewSubject.setText(attendance.getSubject());
                 textViewStatus.setText(attendance.getStatus());
             }

@@ -26,10 +26,9 @@ public class Attendance implements Parcelable {
         this.subject = subject;
         this.status = status;
     }
-    public Attendance(String rollNo, String name,String date, String status) {
+    public Attendance(String rollNo, String name, String status) {
         this.rollNo = rollNo;
         this.name = name;
-        this.date=date;
         this.status = status;
     }
     protected Attendance(Parcel in) {

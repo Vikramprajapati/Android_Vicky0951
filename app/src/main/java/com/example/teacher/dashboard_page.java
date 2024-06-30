@@ -23,7 +23,7 @@ public class dashboard_page extends AppCompatActivity {
         assignment1=findViewById(R.id.assignment);
 
         attendance1.setOnClickListener(v -> {
-            Intent intent=new Intent(dashboard_page.this, upload_attendance.class);
+            Intent intent=new Intent(dashboard_page.this, ViewAttendance.class);
             startActivity(intent);
         });
         marks1.setOnClickListener(v -> {
