@@ -82,13 +82,14 @@ public class DBHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
         return db.rawQuery("SELECT * FROM " + TABLE_STUDENTS, null);
     }
-    public Cursor getFilteredAttendance(String branch, String year, String subject) {
+    public Cursor getFilteredAttendance(String branch, String year, String subject,String date) {
         SQLiteDatabase db = this.getReadableDatabase();
         String query = "SELECT * FROM " + TABLE_ATTENDANCE + " WHERE " +
                 COLUMN_ATTENDANCE_BRANCH + " = ? AND " +
                 COLUMN_ATTENDANCE_YEAR + " = ? AND " +
-                COLUMN_ATTENDANCE_SUBJECT + " = ?";
-        return db.rawQuery(query, new String[]{branch, year, subject});
+                COLUMN_ATTENDANCE_SUBJECT + " = ? AND "+
+                COLUMN_ATTENDANCE_DATE + " = ?";
+        return db.rawQuery(query, new String[]{branch, year, subject, date});
     }
 
 
