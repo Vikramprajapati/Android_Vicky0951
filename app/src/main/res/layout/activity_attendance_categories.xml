@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.example.teacher.AttendanceCategoriesActivity">
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="70dp"
+        android:orientation="horizontal">
+        <TextView
+            android:id="@+id/textViewYear1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="5dp"
+            android:text="Year: " />
+
+        <TextView
+            android:id="@+id/textViewBranch1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="5dp"
+            android:text="Branch: " />
+
+        <TextView
+            android:id="@+id/textViewSemester1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="5dp"
+            android:text="Semester: " />
+
+        <TextView
+            android:id="@+id/textViewSubject1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="5dp"
+            android:text="Subject: " />
+
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:layout_gravity="center"
+        android:orientation="vertical">
+        <Button
+            android:layout_width="wrap_content"
+            android:id="@+id/buttonFilterByMonth"
+            android:layout_gravity="center"
+            android:layout_height="wrap_content"
+            android:text="Filter By Month"/>
+        <Button
+            android:id="@+id/buttonFilterByStudent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Filter By Student"/>
+        <Button
+            android:id="@+id/buttonFilterBySubject"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Filter By Subject"/>
+
+
+
+    </LinearLayout>
+
+
+
+</LinearLayout>
