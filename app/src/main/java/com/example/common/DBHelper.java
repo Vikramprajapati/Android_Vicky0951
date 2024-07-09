@@ -1,4 +1,4 @@
-package com.example.admin;
+package com.example.common;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -119,4 +119,26 @@ public class DBHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         return db.rawQuery("SELECT * FROM " + TABLE_ATTENDANCE, null);
     }
+
+    public Cursor getMonthlyAttendance(String branch, String year, String subject, String monthYear) {
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        // Construct the query
+        String query = "SELECT " + COLUMN_ATTENDANCE_ROLL_NO + ", " +
+                COLUMN_ATTENDANCE_NAME + ", " +
+                COLUMN_ATTENDANCE_DATE + ", " +  // Added date column to fetch for each day
+                COLUMN_ATTENDANCE_STATUS +
+                " FROM " + TABLE_ATTENDANCE +
+                " WHERE " + COLUMN_ATTENDANCE_BRANCH + " = ?" +
+                " AND " + COLUMN_ATTENDANCE_YEAR + " = ?" +
+                " AND " + COLUMN_ATTENDANCE_SUBJECT + " = ?" +
+                " AND " + COLUMN_ATTENDANCE_DATE + " LIKE ?";
+
+        // Adjusting the date format for filtering (assuming monthYear format is MM/yyyy)
+        String formattedDatePattern = "%/" + monthYear;
+
+        // Execute the query with the provided parameters
+        return db.rawQuery(query, new String[]{branch, year, subject, formattedDatePattern});
+    }
+
 }

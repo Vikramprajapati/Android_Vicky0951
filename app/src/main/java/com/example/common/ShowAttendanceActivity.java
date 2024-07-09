@@ -1,4 +1,4 @@
-package com.example.teacher;
+package com.example.common;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
@@ -10,20 +10,15 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
-import android.widget.ListView;
 import android.widget.TextView;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.admin.DBHelper;
 import com.example.admin.R;
+import com.example.teacher.AttendanceCategoriesActivity;
 
 import java.util.ArrayList;
 import java.util.Calendar;

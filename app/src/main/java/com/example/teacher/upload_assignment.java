@@ -204,16 +204,16 @@ public class upload_assignment extends AppCompatActivity {
                     filename.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                         @Override
                         public void onSuccess(Uri uri) {
-                            DatabaseReference databaseReference=FirebaseDatabase.getInstance().getReference().child("ASSIGNMENT");
+                            DatabaseReference databaseReference=FirebaseDatabase.getInstance().getReference().child("Assignment");
                             HashMap<String,String> hashMap=new HashMap<>();
-                            hashMap.put("Assignment Url",String.valueOf((uri)));
-                            hashMap.put("Date",currentDate.format(calForData.getTime()));
-                            hashMap.put("Time",currentTime.format(calForData.getTime()));
-                            hashMap.put("Unique Key",databaseReference.child("MARKS").push().getKey());
-                            hashMap.put("Assignment Title",assignmentTitle.getText().toString());
-                            hashMap.put("Year",spin_year.getSelectedItem().toString());
-                            hashMap.put("Branch:",spin_branch.getSelectedItem().toString());
-                            hashMap.put("Semester:",spin_sem.getSelectedItem().toString());
+                            hashMap.put("url",String.valueOf((uri)));
+                            hashMap.put("date",currentDate.format(calForData.getTime()));
+                            hashMap.put("time",currentTime.format(calForData.getTime()));
+                            hashMap.put("key",databaseReference.child("Assignment").push().getKey());
+                            hashMap.put("title",assignmentTitle.getText().toString());
+                            hashMap.put("year",spin_year.getSelectedItem().toString());
+                            hashMap.put("branch:",spin_branch.getSelectedItem().toString());
+                            hashMap.put("semester:",spin_sem.getSelectedItem().toString());
                             databaseReference.push().setValue(hashMap);
                             pd2.dismiss();
                             Toast.makeText(upload_assignment.this,"Assignment uploaded successfully ",Toast.LENGTH_SHORT).show();

@@ -201,7 +201,7 @@ public class upload_time_table extends AppCompatActivity {
         pd3.show();
         for (int j = 0; j < fileuris.size(); j++) {
             Uri perfile = fileuris.get(j);
-            StorageReference folder = FirebaseStorage.getInstance().getReference().child("Time Table");
+            StorageReference folder = FirebaseStorage.getInstance().getReference().child("Time-Table");
             StorageReference filename = folder.child("file" + perfile.getLastPathSegment());
 
             filename.putFile(perfile).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
@@ -211,16 +211,16 @@ public class upload_time_table extends AppCompatActivity {
                     filename.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                         @Override
                         public void onSuccess(Uri uri) {
-                            DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("Time Table");
+                            DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("Time-Table");
                             HashMap<String, String> hashMap = new HashMap<>();
-                            hashMap.put("Time Table Url", String.valueOf((uri)));
-                            hashMap.put("Date", currentDate.format(calForData.getTime()));
-                            hashMap.put("Time", currentTime.format(calForData.getTime()));
-                            hashMap.put("Unique Key", databaseReference.child("TIME TABLE").push().getKey());
-                            hashMap.put("Time Table Title", tableTitle.getText().toString());
-                            hashMap.put("Year", spin_year.getSelectedItem().toString());
-                            hashMap.put("Branch:", spin_branch.getSelectedItem().toString());
-                            hashMap.put("Semester:", spin_sem.getSelectedItem().toString());
+                            hashMap.put("url", String.valueOf((uri)));
+                            hashMap.put("date", currentDate.format(calForData.getTime()));
+                            hashMap.put("time", currentTime.format(calForData.getTime()));
+                            hashMap.put("key", databaseReference.child("Time-Table").push().getKey());
+                            hashMap.put("title", tableTitle.getText().toString());
+                            hashMap.put("year", spin_year.getSelectedItem().toString());
+                            hashMap.put("branch:", spin_branch.getSelectedItem().toString());
+                            hashMap.put("semester:", spin_sem.getSelectedItem().toString());
                             databaseReference.push().setValue(hashMap);
                             pd3.dismiss();
                             Toast.makeText(upload_time_table.this, "Time Table uploaded successfully ", Toast.LENGTH_SHORT).show();

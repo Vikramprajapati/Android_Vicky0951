@@ -28,6 +28,10 @@ android {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
+    packagingOptions {
+        exclude("META-INF/RELEASE_NOTES.txt")
+        // Add more exclusions as needed
+    }
 }
 
 dependencies {
@@ -43,9 +47,17 @@ dependencies {
     implementation("com.google.firebase:firebase-auth:22.3.1")
     implementation("de.hdodenhof:circleimageview:3.0.1")
     implementation("com.squareup.picasso:picasso:2.71828")
+    implementation("androidx.navigation:navigation-fragment:2.7.7")
+    implementation("androidx.navigation:navigation-ui:2.7.7")
+//    implementation("com.whiteelephant:monthandyearpicker:1.1.1")
+//    implementation("org.apache.poi:poi:5.3.1")
+//    implementation("org.apache.poi:poi-ooxml:5.3.1")
+    implementation(files("libs\\poi-3.7.jar\\poi-3.7.jar"))
+    implementation(files("libs\\poi-ooxml-3.7.jar\\poi-ooxml-3.7.jar"))
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
+
 
 
 

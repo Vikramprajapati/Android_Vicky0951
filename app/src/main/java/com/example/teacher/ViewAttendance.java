@@ -22,11 +22,13 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.admin.DBHelper;
+import com.example.common.Attendance;
+import com.example.common.AttendanceAdapter;
+import com.example.common.DBHelper;
 import com.example.admin.R;
+import com.example.common.ShowAttendanceActivity;
 
 import java.io.BufferedReader;
 import java.io.IOException;

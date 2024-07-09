@@ -45,6 +45,9 @@
                     android:layout_height="wrap_content"
                     android:text="select image"
                     android:textStyle="bold"
+
+
+
                     android:padding="5dp"
                     android:layout_marginTop="10dp"
                     android:textColor="@color/textColor"

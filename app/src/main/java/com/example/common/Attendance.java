@@ -1,4 +1,4 @@
-package com.example.teacher;
+package com.example.common;
 
 import android.os.Parcel;
 import android.os.Parcelable;

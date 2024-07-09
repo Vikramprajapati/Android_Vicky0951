@@ -272,16 +272,16 @@ public void uploadfiles(){
                    filename.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                        @Override
                        public void onSuccess(Uri uri) {
-                           DatabaseReference databaseReference=FirebaseDatabase.getInstance().getReference().child("MARKS");
+                           DatabaseReference databaseReference=FirebaseDatabase.getInstance().getReference().child("Marks");
                            HashMap<String,String> hashMap=new HashMap<>();
-                           hashMap.put("Marks Url",String.valueOf((uri)));
-                           hashMap.put("Date",currentDate.format(calForData.getTime()));
-                           hashMap.put("Time",currentTime.format(calForData.getTime()));
-                           hashMap.put("Unique Key",databaseReference.child("MARKS").push().getKey());
-                           hashMap.put("Marks Title",marksTitle.getText().toString());
-                           hashMap.put("Year",spin_year.getSelectedItem().toString());
-                           hashMap.put("Branch:",spin_branch.getSelectedItem().toString());
-                           hashMap.put("Semester:",spin_sem.getSelectedItem().toString());
+                           hashMap.put("url",String.valueOf((uri)));
+                           hashMap.put("date",currentDate.format(calForData.getTime()));
+                           hashMap.put("time",currentTime.format(calForData.getTime()));
+                           hashMap.put("key",databaseReference.child("Marks").push().getKey());
+                           hashMap.put("title",marksTitle.getText().toString());
+                           hashMap.put("year",spin_year.getSelectedItem().toString());
+                           hashMap.put("branch:",spin_branch.getSelectedItem().toString());
+                           hashMap.put("semester:",spin_sem.getSelectedItem().toString());
                            databaseReference.push().setValue(hashMap);
                            pd1.dismiss();
                            Toast.makeText(upload_marks.this,"marks uploaded successfully ",Toast.LENGTH_SHORT).show();

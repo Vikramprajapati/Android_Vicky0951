@@ -10,15 +10,13 @@ import android.widget.DatePicker;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.admin.DBHelper;
+import com.example.common.Attendance;
+import com.example.common.AttendanceAdapter;
+import com.example.common.DBHelper;
 import com.example.admin.R;
 
 import java.util.ArrayList;

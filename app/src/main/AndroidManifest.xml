@@ -18,6 +18,9 @@
         android:theme="@style/Theme.ADMIN"
         tools:targetApi="31">
         <activity
+            android:name="com.example.teacher.MonthActivity"
+            android:exported="false" />
+        <activity
             android:name="com.example.teacher.AttendanceCategoriesActivity"
             android:exported="false" />
         <activity
@@ -81,7 +84,7 @@
             android:name="com.example.teacher.TakeAttendanceActivity"
             android:exported="false" />
         <activity
-            android:name="com.example.teacher.ShowAttendanceActivity"
+            android:name="com.example.common.ShowAttendanceActivity"
             android:exported="false" />
         <activity
             android:name=".notice.Upload_notice"

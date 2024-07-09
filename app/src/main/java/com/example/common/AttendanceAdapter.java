@@ -1,4 +1,4 @@
-package com.example.teacher;
+package com.example.common;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -6,12 +6,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.admin.R;
+import com.example.common.Attendance;
 
 import java.util.ArrayList;
 
